@@ -32,7 +32,7 @@ const slides = [
   {
     id: 1,
     title: 'TALE OF THE GEMS',
-    description: 'We are the best gem workers in the world. We have been working with gems for over 100 years, and we have a deep understanding of the beauty and rarity of these precious stones.',
+    description: 'We are the world finest gem workers, with over 100 years of expertise in the beauty and rarity of precious stones.',
     videoUrl: videoOne,
     buttonText: 'DISCOVER THE TALE'
   },
@@ -87,8 +87,8 @@ onUnmounted(() => {
       </nav>
     </aside>
 
-    <header 
-      :class="activeIndex >= 2 ? 'bg-[#fafaf9] text-black border-b border-slate-200' : 'mix-blend-difference text-white'"
+    <header
+      v-if="activeIndex < 2"
       class="fixed top-0 left-0 w-full z-50 grid grid-cols-3 items-center px-12 py-8 transition-all duration-700"
     >
       <div class="flex items-center">
@@ -98,8 +98,11 @@ onUnmounted(() => {
         </button>
       </div>
       <div class="flex justify-center">
-        <img :src="logoImg" alt="Logo" class="h-10 w-auto object-contain transition-all duration-700" :class="activeIndex < 2 ? 'brightness-0 invert' : ''" />
+      <div class="rounded-full bg-white/90 backdrop-blur-md shadow-lg ring-1 ring-black/10 px-3 py-2">
+        <img :src="logoImg" alt="Logo" class="h-12 w-12 object-contain" />
+        </div>
       </div>
+            
       <div class="flex justify-end gap-8 items-center">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -118,9 +121,9 @@ onUnmounted(() => {
       </video>
       <div class="absolute inset-0 bg-black/30"></div>
 
-      <div class="relative z-10 max-w-2xl">
+      <div class="relative z-10 max-w-1x2l">
         <h2 class="text-5xl md:text-7xl font-light tracking-tight mb-8">{{ slide.title }}</h2>
-        <p class="text-white/70 text-lg leading-relaxed mb-10 font-light italic">{{ slide.description }}</p>
+        <p class="text-white text-lg leading-relaxed mb-10 font-light italic">{{ slide.description }}</p>
         <button class="px-10 py-4 border border-white/50 rounded-full hover:bg-white hover:text-black transition-all duration-700 text-[10px] tracking-[0.2em] font-bold uppercase">
           {{ slide.buttonText }}
         </button>
