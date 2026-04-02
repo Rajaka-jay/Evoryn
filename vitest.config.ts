@@ -4,7 +4,7 @@ import tailwindcss from '@tailwindcss/vite'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/Evoryn/',        // ← Keep this (with trailing slash)
+  base: '/Evoryn/',
   plugins: [
     vue(),
     tailwindcss(),

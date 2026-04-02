@@ -1,17 +1,18 @@
 import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue' // Ensure this says @vitejs/plugin-vue
+import vue from '@vitejs/plugin-vue'
 import tailwindcss from '@tailwindcss/vite'
-import { fileURLToPath } from 'url'
+import { fileURLToPath, URL } from 'node:url'
 
+// https://vitejs.dev/config/
 export default defineConfig({
+  base: '/Evoryn/',     // Keep this for GitHub Pages
   plugins: [
     vue(),
     tailwindcss(),
   ],
   resolve: {
     alias: {
-      // This tells Vite that @ = the src folder
-      '@': fileURLToPath(new URL('./src', import.meta.url))
-    }
-  }
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+    },
+  },
 })
