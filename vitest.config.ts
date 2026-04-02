@@ -4,9 +4,12 @@ import tailwindcss from '@tailwindcss/vite'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/Evoryn/',
+  base: '/Evoryn/',           // ← Keep this (repo name + trailing slash)
   plugins: [
     vue(),
     tailwindcss(),
   ],
+  build: {
+    assetsDir: 'assets',      // Make sure assets folder is named correctly
+  }
 })
