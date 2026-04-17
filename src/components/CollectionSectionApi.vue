@@ -1,17 +1,14 @@
 <template>
   <section class="bg-white py-16 text-black dark:bg-[#0f0f11] dark:text-white">
     <div class="mx-auto w-[92%] max-w-7xl">
-      <h2 class="text-5xl md:text-6xl font-semibold">EXPLORE OUR COLLECTION</h2>
-      <p class="mt-3 text-lg md:text-xl text-black/80 dark:text-white/80">
+      <!-- same heading system -->
+      <h2 class="typo-heading uppercase">Explore Our Collection</h2>
+      <p class="typo-body mt-3">
         Gems and jewellery curated for your collection.
       </p>
 
       <div v-if="loading" class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div
-          v-for="n in 4"
-          :key="n"
-          class="rounded-2xl bg-[#efefef] dark:bg-[#1a1a1d] p-4 animate-pulse"
-        >
+        <div v-for="n in 4" :key="n" class="rounded-2xl bg-[#efefef] dark:bg-[#1a1a1d] p-4 animate-pulse">
           <div class="h-52 w-full rounded-2xl bg-gray-300 dark:bg-gray-700"></div>
           <div class="mt-3 h-4 w-3/4 bg-gray-300 dark:bg-gray-700 rounded"></div>
           <div class="mt-2 h-3 w-full bg-gray-300 dark:bg-gray-700 rounded"></div>
@@ -23,10 +20,8 @@
         v-else-if="visibleItems.length === 0"
         class="mt-8 rounded-xl border border-black/15 dark:border-white/20 bg-[#f8f8f8] dark:bg-[#17171a] p-8 text-center"
       >
-        <p class="text-xl font-semibold">No matching products</p>
-        <p class="text-sm text-black/65 dark:text-white/65 mt-1">
-          Try another keyword (title, category, brand).
-        </p>
+        <p class="typo-heading !text-2xl">No matching products</p>
+        <p class="typo-body mt-1">Try another keyword (title, category, brand).</p>
       </div>
 
       <div v-else class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -47,15 +42,17 @@
             />
           </div>
 
-          <ul class="mt-3 list-disc pl-4 text-sm min-h-[95px] leading-5">
+          <ul class="mt-3 list-disc pl-4 text-sm leading-5 min-h-[95px]">
             <li class="font-medium">{{ item.title }}</li>
             <li>Category: {{ item.category }}</li>
             <li>Brand: {{ item.brand || 'N/A' }}</li>
             <li>Stock: {{ item.stock }}</li>
           </ul>
 
-          <p class="mt-3 font-medium">USD ${{ item.price }}</p>
-          <p class="text-base">
+          <p class="mt-3 typo-label !tracking-[0.2em] !text-[11px] !text-slate-700 dark:!text-slate-300">Price</p>
+          <p class="typo-special !not-italic !font-medium">USD ${{ item.price }}</p>
+
+          <p class="text-base mt-1">
             <span
               v-for="n in 5"
               :key="n"
@@ -70,15 +67,10 @@
       <div v-if="filteredItems.length > 4" class="mt-12 flex justify-center">
         <button
           @click="showAll = !showAll"
-          class="group inline-flex items-center gap-3 rounded-full border border-black/30 dark:border-white/35 bg-white dark:bg-transparent px-8 py-3 text-sm md:text-base tracking-[0.18em] uppercase font-medium text-black dark:text-white transition-all duration-300 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black"
+          class="group inline-flex items-center gap-3 rounded-full border border-black/30 dark:border-white/35 bg-white dark:bg-transparent px-8 py-3 transition-all duration-300 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black typo-btn"
         >
           {{ showAll ? 'Show Less' : 'Explore More' }}
-          <span
-            v-if="!showAll"
-            class="transition-transform duration-300 group-hover:translate-x-1"
-          >
-            →
-          </span>
+          <span v-if="!showAll" class="transition-transform duration-300 group-hover:translate-x-1">→</span>
           <span v-else class="leading-none">↑</span>
         </button>
       </div>

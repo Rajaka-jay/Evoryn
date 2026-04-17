@@ -1,21 +1,30 @@
 @import "tailwindcss";
-
-/* Make Tailwind `dark:` utilities follow .dark class (manual toggle), not browser theme */
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Optional base defaults */
-:root {
-  background-color: white;
-  color: black;
-}
+/* Typography system */
+@layer components {
+  /* Section headline (big topics) */
+  .typo-heading {
+    @apply text-3xl md:text-5xl font-light tracking-tight leading-tight text-slate-900 dark:text-slate-100;
+  }
 
-body {
-  margin: 0;
-  min-height: 100vh;
-}
+  /* Section paragraph */
+  .typo-body {
+    @apply text-base md:text-lg leading-relaxed font-light text-slate-700 dark:text-slate-300;
+  }
 
-/* Optional global dark fallback (your existing style kept) */
-html.dark {
-  background-color: #020617;
-  color: #f8fafc;
+  /* Small label / eyebrow text */
+  .typo-label {
+    @apply text-[10px] tracking-[0.4em] uppercase font-bold text-amber-700 dark:text-amber-400;
+  }
+
+  /* Special italic emphasis text */
+  .typo-special {
+    @apply italic font-normal text-slate-600 dark:text-slate-300;
+  }
+
+  /* Button text style consistency */
+  .typo-btn {
+    @apply text-[10px] tracking-[0.2em] font-bold uppercase;
+  }
 }

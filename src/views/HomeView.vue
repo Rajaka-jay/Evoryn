@@ -122,8 +122,6 @@ function handleScroll() {
   const y = window.scrollY;
   const h = window.innerHeight;
   currentSection.value = Math.round(y / h);
-
-  // after section 1
   showHeader.value = currentSection.value < 2;
 }
 
@@ -225,30 +223,18 @@ onUnmounted(() => {
 
 <template>
   <main class="bg-white text-black min-h-screen dark:bg-[#0b0b0c] dark:text-white transition-colors duration-300">
-    <div
-      class="fixed top-0 left-0 w-full h-16 z-[60]"
-      @mouseenter="onTopHoverEnter"
-      @mouseleave="onTopHoverLeave"
-    ></div>
+    <div class="fixed top-0 left-0 w-full h-16 z-[60]" @mouseenter="onTopHoverEnter" @mouseleave="onTopHoverLeave"></div>
 
     <aside
       :class="isMenuOpen ? 'translate-x-0' : '-translate-x-full'"
       class="fixed top-0 left-0 h-full w-80 bg-black/95 backdrop-blur-xl z-[100] transition-transform duration-700 ease-in-out border-r border-white/10 p-12 text-white"
     >
-      <button
-        @click="isMenuOpen = false"
-        class="text-xs tracking-[0.3em] text-white/70 hover:text-white mb-20 uppercase"
-      >
+      <button @click="isMenuOpen = false" class="text-xs tracking-[0.3em] text-white/70 hover:text-white mb-20 uppercase">
         Close ✕
       </button>
 
       <nav class="flex flex-col gap-8">
-        <a
-          v-for="item in menuItems"
-          :key="item.name"
-          href="#"
-          class="text-3xl font-light hover:text-amber-400 transition-colors"
-        >
+        <a v-for="item in menuItems" :key="item.name" href="#" class="text-3xl font-light hover:text-amber-400 transition-colors">
           {{ item.name }}
         </a>
       </nav>
@@ -295,14 +281,7 @@ onUnmounted(() => {
           class="inline-flex items-center justify-center rounded-full p-2 hover:bg-black/10 dark:hover:bg-white/10 transition"
           :aria-label="isSearchOpen ? 'Close search' : 'Open search'"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
-            :class="isHeaderBlack ? 'text-black dark:text-white' : 'text-white'"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" :class="isHeaderBlack ? 'text-black dark:text-white' : 'text-white'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
         </button>
@@ -321,19 +300,8 @@ onUnmounted(() => {
             placeholder="Search gems, jewellery, brand..."
             class="w-full rounded-xl border border-black/20 dark:border-white/20 px-4 py-2 text-black dark:text-white bg-white dark:bg-[#0f0f11] outline-none focus:ring-2 focus:ring-black/20 dark:focus:ring-white/20"
           />
-          <button
-            type="submit"
-            class="rounded-xl bg-black dark:bg-white px-4 py-2 text-white dark:text-black hover:opacity-85"
-          >
-            Search
-          </button>
-          <button
-            type="button"
-            @click="closeSearch"
-            class="rounded-xl border border-black/20 dark:border-white/20 px-3 py-2 text-black dark:text-white hover:bg-black/5 dark:hover:bg-white/10"
-          >
-            ✕
-          </button>
+          <button type="submit" class="rounded-xl bg-black dark:bg-white px-4 py-2 text-white dark:text-black hover:opacity-85">Search</button>
+          <button type="button" @click="closeSearch" class="rounded-xl border border-black/20 dark:border-white/20 px-3 py-2 text-black dark:text-white hover:bg-black/5 dark:hover:bg-white/10">✕</button>
         </form>
 
         <div v-if="debouncedSearchQuery && searchPreviewItems.length" class="mt-3 max-h-80 overflow-auto rounded-xl border border-black/10 dark:border-white/20">
@@ -352,18 +320,11 @@ onUnmounted(() => {
             <span class="ml-auto text-xs font-medium">USD ${{ item.price }}</span>
           </button>
         </div>
-
-        <div v-else-if="debouncedSearchQuery" class="mt-3 text-sm text-black/60 dark:text-white/70">
-          No matching items.
-        </div>
       </div>
     </transition>
 
-    <section
-      v-for="slide in slides"
-      :key="slide.id"
-      class="relative min-h-screen flex items-center px-6 md:px-24 text-white"
-    >
+    <!-- First section (left as your hero style) -->
+    <section v-for="slide in slides" :key="slide.id" class="relative min-h-screen flex items-center px-6 md:px-24 text-white">
       <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover">
         <source :src="slide.videoUrl" type="video/mp4" />
       </video>
@@ -371,33 +332,34 @@ onUnmounted(() => {
 
       <div class="relative z-10 max-w-2xl">
         <h2 class="text-4xl md:text-7xl font-light tracking-tight mb-6">{{ slide.title }}</h2>
-        <p class="text-white/90 text-base md:text-lg leading-relaxed mb-8 font-light italic">
-          {{ slide.description }}
-        </p>
+        <p class="text-white/90 text-base md:text-lg leading-relaxed mb-8 font-light italic">{{ slide.description }}</p>
         <button class="px-8 py-3 border border-white/60 rounded-full hover:bg-white hover:text-black transition-all duration-500 text-[10px] tracking-[0.2em] font-bold uppercase">
           {{ slide.buttonText }}
         </button>
       </div>
     </section>
 
+    <!-- After first section: consistent typography classes -->
     <section class="bg-white dark:bg-[#0f0f11] text-slate-900 dark:text-slate-100">
       <div class="min-h-screen w-full flex flex-col md:flex-row items-center">
         <div class="w-full md:w-1/2 h-[60vh] md:h-screen relative overflow-hidden">
           <img :src="manufactureImg" class="w-full h-full object-cover" />
         </div>
+
         <div class="w-full md:w-1/2 h-auto md:h-screen flex flex-col justify-center px-6 md:px-24 py-12 md:py-0">
           <div class="max-w-lg">
-            <span class="text-[10px] tracking-[0.4em] text-amber-700 font-bold uppercase mb-4 block">
-              The Power of Craftsmanship
-            </span>
-            <h2 class="text-3xl md:text-5xl font-normal leading-tight tracking-tight mb-8">
+            <span class="typo-label mb-4 block">The Power of Craftsmanship</span>
+
+            <h2 class="typo-heading mb-8">
               THE LAST FAMILY-OWNED <br />
-              <span class="italic font-normal text-slate-600 dark:text-slate-300">GEM VAULT</span>
+              <span class="typo-special">GEM VAULT</span>
             </h2>
-            <p class="leading-relaxed text-base md:text-lg mb-10 md:mb-12 font-light italic text-slate-700 dark:text-slate-300">
+
+            <p class="typo-body mb-10 md:mb-12">
               Owned by the same family since its inception, our vault benefits from full creative freedom.
             </p>
-            <button class="px-10 md:px-12 py-3 md:py-4 border border-slate-900 dark:border-slate-100 text-slate-900 dark:text-slate-100 rounded-full hover:bg-slate-900 hover:text-white dark:hover:bg-slate-100 dark:hover:text-black transition-all duration-500 text-[10px] tracking-[0.2em] font-bold uppercase">
+
+            <button class="px-10 md:px-12 py-3 md:py-4 border border-slate-900 dark:border-slate-100 text-slate-900 dark:text-slate-100 rounded-full hover:bg-slate-900 hover:text-white dark:hover:bg-slate-100 dark:hover:text-black transition-all duration-500 typo-btn">
               Our Values
             </button>
           </div>
@@ -407,17 +369,18 @@ onUnmounted(() => {
       <div class="min-h-screen w-full flex flex-col md:flex-row items-center">
         <div class="w-full md:w-1/2 h-auto md:h-screen flex flex-col justify-center px-6 md:px-24 py-12 md:py-0 order-2 md:order-1">
           <div class="max-w-lg">
-            <span class="text-[10px] tracking-[0.4em] text-[#7a624b] dark:text-[#c8a98a] font-bold uppercase mb-4 block">
-              A Long-Term Vision
-            </span>
-            <h2 class="text-3xl md:text-5xl font-light leading-tight tracking-tight mb-8 uppercase">
+            <span class="typo-label mb-4 block">A Long-Term Vision</span>
+
+            <h2 class="typo-heading mb-8 uppercase">
               Innovation and <br />
-              <span class="italic font-normal text-[#7a624b] dark:text-[#c8a98a]">Tradition</span>
+              <span class="typo-special">Tradition</span>
             </h2>
-            <p class="leading-relaxed text-base md:text-lg mb-10 md:mb-12 font-light text-slate-700 dark:text-slate-300">
+
+            <p class="typo-body mb-10 md:mb-12">
               We nurture a tradition of innovation, pushing the boundaries of gemstone artistry through advanced research and rare handcrafts.
             </p>
-            <button class="px-10 py-3 md:py-4 border border-slate-900 dark:border-slate-100 text-slate-900 dark:text-slate-100 rounded-full hover:bg-slate-900 hover:text-white dark:hover:bg-slate-100 dark:hover:text-black transition-all duration-500 text-[10px] tracking-[0.2em] font-bold uppercase">
+
+            <button class="px-10 py-3 md:py-4 border border-slate-900 dark:border-slate-100 text-slate-900 dark:text-slate-100 rounded-full hover:bg-slate-900 hover:text-white dark:hover:bg-slate-100 dark:hover:text-black transition-all duration-500 typo-btn">
               Advanced Research
             </button>
           </div>
