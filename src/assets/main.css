@@ -1,19 +1,21 @@
 @import "tailwindcss";
 
-/* 1. Reset the default behavior */
+/* Make Tailwind `dark:` utilities follow .dark class (manual toggle), not browser theme */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Optional base defaults */
 :root {
   background-color: white;
   color: black;
 }
 
-/* 2. ONLY apply dark styles if the 'dark' class is on the <html> tag */
-/* This ignores the browser/system setting */
-.dark {
-  background-color: #020617 !important; 
-  color: #f8fafc !important;
-}
-
 body {
   margin: 0;
   min-height: 100vh;
+}
+
+/* Optional global dark fallback (your existing style kept) */
+html.dark {
+  background-color: #020617;
+  color: #f8fafc;
 }
