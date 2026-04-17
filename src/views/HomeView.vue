@@ -1,24 +1,18 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
-import { useRouter } from 'vue-router';
-import logoImg from '@/assets/logo.png';
 
+import logoImg from '@/assets/logo.png';
 import videoOne from '@/assets/video1.mp4';
 import videoTwo from '@/assets/video2.mp4';
-
 import manufactureImg from '@/assets/images.jpeg';
 import gemGallery1 from '@/assets/gem1.png';
 import gemGallery2 from '@/assets/gem2.png';
 import gemGallery3 from '@/assets/gem3.png';
 
-import CollectionSectionApi from '@/components/CollectionSection.vue';
+import CollectionSectionApi from '@/components/CollectionSectionApi.vue';
 import SiteFooter from '@/components/SiteFooter.vue';
 
-const router = useRouter();
-
-// STATE
 const isMenuOpen = ref(false);
-const activeIndex = ref(0);
 const activeImageIndex = ref(0);
 const gallery = [gemGallery1, gemGallery2, gemGallery3];
 
@@ -35,7 +29,7 @@ const slides = [
     id: 1,
     title: 'TALE OF THE GEMS',
     description:
-      'We are the world finest gem workers, with over 100 years of expertise in the beauty and rarity of <br/> precious stones.',
+      'We are the world finest gem workers, with over 100 years of expertise in the beauty and rarity of precious stones.',
     videoUrl: videoOne,
     buttonText: 'DISCOVER THE TALE'
   },
@@ -49,27 +43,6 @@ const slides = [
   }
 ];
 
-// Total snap sections:
-// - hero slides (slides.length)
-// - craftsmanship section (1)
-// - collection section (1)
-// - footer section (1)
-const totalSlides = slides.length + 3;
-
-// LOGIC
-const scrollToSlide = (index: number) => {
-  activeIndex.value = index;
-  const el = document.getElementById(`slide-${index}`);
-  el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-};
-
-const handleScroll = (event: Event) => {
-  const target = event.target as HTMLElement;
-  const scrollPos = target.scrollTop;
-  const pageHeight = target.clientHeight;
-  activeIndex.value = Math.round(scrollPos / pageHeight);
-};
-
 let galleryTimer: ReturnType<typeof setInterval> | null = null;
 
 onMounted(() => {
@@ -81,21 +54,10 @@ onMounted(() => {
 onUnmounted(() => {
   if (galleryTimer) clearInterval(galleryTimer);
 });
-
-function goToProduct(id: number): void {
-  router.push(`/product/${id}`);
-}
-
-function goToProductsPage(): void {
-  router.push('/products');
-}
 </script>
 
 <template>
-  <div
-    @scroll="handleScroll"
-    class="h-screen overflow-y-scroll snap-y snap-mandatory bg-black text-white selection:bg-amber-500/30"
-  >
+  <main class="bg-black text-white">
     <!-- Side Menu -->
     <aside
       :class="isMenuOpen ? 'translate-x-0' : '-translate-x-full'"
@@ -103,16 +65,17 @@ function goToProductsPage(): void {
     >
       <button
         @click="isMenuOpen = false"
-        class="text-xs tracking-[0.3em] text-white/50 hover:text-white mb-20 uppercase"
+        class="text-xs tracking-[0.3em] text-white/70 hover:text-white mb-20 uppercase"
       >
         Close ✕
       </button>
+
       <nav class="flex flex-col gap-8">
         <a
           v-for="item in menuItems"
           :key="item.name"
           href="#"
-          class="text-3xl font-light hover:text-amber-500 transition-colors"
+          class="text-3xl font-light hover:text-amber-400 transition-colors"
         >
           {{ item.name }}
         </a>
@@ -120,9 +83,7 @@ function goToProductsPage(): void {
     </aside>
 
     <!-- Header -->
-    <header
-      class="fixed top-0 left-0 w-full z-50 grid grid-cols-3 items-center px-6 md:px-12 py-6 md:py-8 transition-all duration-700"
-    >
+    <header class="fixed top-0 left-0 w-full z-50 grid grid-cols-3 items-center px-6 md:px-12 py-6 md:py-8">
       <div class="flex items-center">
         <button @click="isMenuOpen = true" class="flex items-center gap-3 group cursor-pointer">
           <div class="flex flex-col gap-1.5">
@@ -139,48 +100,52 @@ function goToProductsPage(): void {
         </div>
       </div>
 
-      <div class="flex justify-end gap-8 items-center">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <div class="flex justify-end">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
         </svg>
       </div>
     </header>
 
-    <!-- Hero video slides -->
+    <!-- Hero sections -->
     <section
-      v-for="(slide, index) in slides"
+      v-for="slide in slides"
       :key="slide.id"
-      :id="`slide-${index}`"
-      class="h-screen w-full relative snap-start flex items-center px-6 md:px-24"
+      class="relative min-h-screen flex items-center px-6 md:px-24"
     >
       <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover">
         <source :src="slide.videoUrl" type="video/mp4" />
       </video>
-      <div class="absolute inset-0 bg-black/30"></div>
+      <div class="absolute inset-0 bg-black/35"></div>
 
       <div class="relative z-10 max-w-2xl">
-        <h2 class="text-4xl md:text-7xl font-light tracking-tight mb-6 md:mb-8">{{ slide.title }}</h2>
-        <p class="text-white/90 text-base md:text-lg leading-relaxed mb-8 md:mb-10 font-light italic" v-html="slide.description"></p>
-        <button class="px-8 md:px-10 py-3 md:py-4 border border-white/50 rounded-full hover:bg-white hover:text-black transition-all duration-700 text-[10px] tracking-[0.2em] font-bold uppercase">
+        <h2 class="text-4xl md:text-7xl font-light tracking-tight mb-6">{{ slide.title }}</h2>
+        <p class="text-white/90 text-base md:text-lg leading-relaxed mb-8 font-light italic">
+          {{ slide.description }}
+        </p>
+        <button class="px-8 py-3 border border-white/60 rounded-full hover:bg-white hover:text-black transition-all duration-500 text-[10px] tracking-[0.2em] font-bold uppercase">
           {{ slide.buttonText }}
         </button>
       </div>
     </section>
 
-    <!-- Craftsmanship -->
-    <section id="slide-2" class="snap-start min-h-screen w-full bg-[#fafaf9] text-slate-900">
+    <!-- SAME background for second and third sections -->
+    <section class="bg-[#d9d9d9] text-slate-900">
+      <!-- Second section (restored style) -->
       <div class="min-h-screen w-full flex flex-col md:flex-row items-center">
         <div class="w-full md:w-1/2 h-[60vh] md:h-screen relative overflow-hidden">
           <img :src="manufactureImg" class="w-full h-full object-cover" />
         </div>
-        <div class="w-full md:w-1/2 min-h-[40vh] md:h-screen flex flex-col justify-center px-6 md:px-24 py-12 md:py-0">
+        <div class="w-full md:w-1/2 h-auto md:h-screen flex flex-col justify-center px-6 md:px-24 py-12 md:py-0">
           <div class="max-w-lg">
-            <span class="text-[10px] tracking-[0.4em] text-amber-600 font-bold uppercase mb-4 block">The Power of Craftsmanship</span>
-            <h2 class="text-3xl md:text-5xl font-normal leading-tight tracking-tight mb-8">
+            <span class="text-[10px] tracking-[0.4em] text-amber-700 font-bold uppercase mb-4 block">
+              The Power of Craftsmanship
+            </span>
+            <h2 class="text-3xl md:text-5xl font-normal leading-tight tracking-tight mb-8 text-slate-900">
               THE LAST FAMILY-OWNED <br />
-              <span class="italic font-normal text-slate-500">GEM VAULT</span>
+              <span class="italic font-normal text-slate-600">GEM VAULT</span>
             </h2>
-            <p class="text-slate-600 leading-relaxed text-base md:text-lg mb-10 md:mb-12 font-light italic">
+            <p class="text-slate-700 leading-relaxed text-base md:text-lg mb-10 md:mb-12 font-light italic">
               Owned by the same family since its inception, our vault benefits from full creative freedom.
             </p>
             <button class="px-10 md:px-12 py-3 md:py-4 border border-slate-900 text-slate-900 rounded-full hover:bg-slate-900 hover:text-white transition-all duration-500 text-[10px] tracking-[0.2em] font-bold uppercase">
@@ -191,14 +156,16 @@ function goToProductsPage(): void {
       </div>
 
       <div class="min-h-screen w-full flex flex-col md:flex-row items-center">
-        <div class="w-full md:w-1/2 min-h-[40vh] md:h-screen flex flex-col justify-center px-6 md:px-24 py-12 md:py-0 order-2 md:order-1">
+        <div class="w-full md:w-1/2 h-auto md:h-screen flex flex-col justify-center px-6 md:px-24 py-12 md:py-0 order-2 md:order-1">
           <div class="max-w-lg">
-            <span class="text-[10px] tracking-[0.4em] text-[#8b735b] font-bold uppercase mb-4 block">A Long-Term Vision</span>
-            <h2 class="text-3xl md:text-5xl font-light leading-tight tracking-tight mb-8 uppercase">
+            <span class="text-[10px] tracking-[0.4em] text-[#7a624b] font-bold uppercase mb-4 block">
+              A Long-Term Vision
+            </span>
+            <h2 class="text-3xl md:text-5xl font-light leading-tight tracking-tight mb-8 uppercase text-slate-900">
               Innovation and <br />
-              <span class="italic font-normal text-[#8b735b]">Tradition</span>
+              <span class="italic font-normal text-[#7a624b]">Tradition</span>
             </h2>
-            <p class="text-slate-600 leading-relaxed text-base md:text-lg mb-10 md:mb-12 font-light">
+            <p class="text-slate-700 leading-relaxed text-base md:text-lg mb-10 md:mb-12 font-light">
               We nurture a tradition of innovation, pushing the boundaries of gemstone artistry through advanced research and rare handcrafts.
             </p>
             <button class="px-10 py-3 md:py-4 border border-slate-900 text-slate-900 rounded-full hover:bg-slate-900 hover:text-white transition-all duration-500 text-[10px] tracking-[0.2em] font-bold uppercase">
@@ -207,7 +174,7 @@ function goToProductsPage(): void {
           </div>
         </div>
 
-        <div class="w-full md:w-1/2 h-[60vh] md:h-screen relative order-1 md:order-2 bg-slate-100">
+        <div class="w-full md:w-1/2 h-[60vh] md:h-screen relative order-1 md:order-2 bg-slate-200">
           <div
             v-for="(img, idx) in gallery"
             :key="idx"
@@ -222,34 +189,23 @@ function goToProductsPage(): void {
               v-for="(_, idx) in gallery"
               :key="idx"
               class="h-1 transition-all duration-500 rounded-full"
-              :class="activeImageIndex === idx ? 'w-10 bg-white' : 'w-2 bg-white/40'"
+              :class="activeImageIndex === idx ? 'w-10 bg-white' : 'w-2 bg-white/50'"
             />
           </div>
         </div>
       </div>
+
+      <!-- Third section (same background color) -->
+      <CollectionSectionApi />
     </section>
 
-    <!-- DummyJSON Collection -->
-    <section id="slide-3" class="snap-start min-h-screen bg-[#d9d9d9] text-black">
-      <CollectionSection @view-item="goToProduct" @see-more="goToProductsPage" />
+    <!-- Footer wrapper with stronger contrast -->
+    <section class="bg-[#d9d9d9] text-black border-t border-black/20">
+      <div class="[&_*]:text-black">
+        <SiteFooter />
+      </div>
     </section>
-
-    <!-- Footer -->
-    <section id="slide-4" class="snap-start min-h-screen bg-[#d9d9d9] text-black">
-      <SiteFooter />
-    </section>
-
-    <!-- Right-side dot navigation -->
-    <div class="fixed right-4 md:right-8 top-1/2 -translate-y-1/2 flex flex-col gap-4 z-[60]">
-      <button
-        v-for="i in totalSlides"
-        :key="i"
-        @click="scrollToSlide(i - 1)"
-        class="w-2 h-2 rounded-full transition-all duration-500"
-        :class="activeIndex === i - 1 ? 'bg-white scale-150 ring-4 ring-white/20' : 'bg-white/40'"
-      />
-    </div>
-  </div>
+  </main>
 </template>
 
 <style scoped>

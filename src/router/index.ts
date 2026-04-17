@@ -1,8 +1,8 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import { createRouter, createWebHistory } from 'vue-router';
+import HomeView from '@/views/HomeView.vue';
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory('/Evoryn/'),
   routes: [
     {
       path: '/',
@@ -10,7 +10,6 @@ const router = createRouter({
       component: HomeView
     }
   ]
-})
+});
 
-// THIS IS THE MISSING LINE:
-export default router
+export default router;
