@@ -21,6 +21,14 @@ interface SearchProduct {
   thumbnail: string;
 }
 
+interface CartItem {
+  id: number;
+  title: string;
+  price: number;
+  thumbnail: string;
+  quantity: number;
+}
+
 const isMenuOpen = ref(false);
 const activeImageIndex = ref(0);
 const gallery = [gemGallery1, gemGallery2, gemGallery3];
@@ -47,6 +55,17 @@ const searchPool = ref<SearchProduct[]>([]);
 
 const theme = ref<'light' | 'dark'>('light');
 const isDark = computed(() => theme.value === 'dark');
+
+const cartOpen = ref(false);
+const cartItems = ref<CartItem[]>([]);
+
+const cartCount = computed(() =>
+  cartItems.value.reduce((sum, item) => sum + item.quantity, 0)
+);
+
+const cartTotal = computed(() =>
+  cartItems.value.reduce((sum, item) => sum + item.price * item.quantity, 0)
+);
 
 const slides = [
   {
@@ -130,7 +149,7 @@ function onTopHoverEnter() {
 }
 
 function onTopHoverLeave() {
-  if (currentSection.value >= 5 && !isMenuOpen.value) showHeader.value = false;
+  if (currentSection.value >= 6 && !isMenuOpen.value) showHeader.value = false;
 }
 
 function toggleSearch(): void {
@@ -145,6 +164,31 @@ function closeSearch(): void {
 
 function submitSearch(): void {
   debouncedSearchQuery.value = searchQuery.value.trim();
+}
+
+function toggleCart(): void {
+  cartOpen.value = !cartOpen.value;
+}
+
+function addToCart(item: { id: number; title: string; price: number; thumbnail: string }) {
+  const existing = cartItems.value.find((c) => c.id === item.id);
+  if (existing) {
+    existing.quantity += 1;
+  } else {
+    cartItems.value.push({ ...item, quantity: 1 });
+  }
+  cartOpen.value = true;
+}
+
+function removeFromCart(id: number) {
+  cartItems.value = cartItems.value.filter((i) => i.id !== id);
+}
+
+function updateQty(id: number, delta: number) {
+  const item = cartItems.value.find((i) => i.id === id);
+  if (!item) return;
+  item.quantity += delta;
+  if (item.quantity <= 0) removeFromCart(id);
 }
 
 async function loadSearchPool(): Promise<void> {
@@ -285,6 +329,20 @@ onUnmounted(() => {
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
         </button>
+
+        <button
+          type="button"
+          @click="toggleCart"
+          class="relative inline-flex items-center justify-center rounded-full p-2 hover:bg-black/10 dark:hover:bg-white/10 transition"
+          aria-label="Open cart"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" :class="isHeaderBlack ? 'text-black dark:text-white' : 'text-white'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.25 3h1.386a1.125 1.125 0 011.1.828l.383 1.53M7.5 14.25h9.75m-9.75 0a1.5 1.5 0 100 3h9.75a1.5 1.5 0 100-3m-9.75 0L5.106 6.357A1.125 1.125 0 016.2 5.5h12.55a1.125 1.125 0 011.096 1.39l-1.5 6.5A1.125 1.125 0 0117.25 14.25H7.5z" />
+          </svg>
+          <span v-if="cartCount" class="absolute -top-1 -right-1 rounded-full bg-amber-500 text-white text-[10px] px-1.5">
+            {{ cartCount }}
+          </span>
+        </button>
       </div>
     </header>
 
@@ -323,7 +381,43 @@ onUnmounted(() => {
       </div>
     </transition>
 
-    <!-- First section (left as your hero style) -->
+    <!-- Cart drawer -->
+    <transition name="fade">
+      <div v-if="cartOpen" class="fixed inset-0 z-[120] bg-black/40" @click.self="cartOpen = false">
+        <aside class="absolute right-0 top-0 h-full w-[90vw] max-w-md bg-white dark:bg-[#121214] p-6 shadow-xl">
+          <div class="flex items-center justify-between">
+            <h3 class="typo-heading !text-2xl">Your Cart</h3>
+            <button class="text-sm" @click="cartOpen = false">✕</button>
+          </div>
+
+          <div v-if="cartItems.length === 0" class="mt-6 text-sm text-black/60 dark:text-white/60">
+            Cart is empty.
+          </div>
+
+          <div v-else class="mt-6 space-y-4">
+            <div v-for="item in cartItems" :key="item.id" class="flex items-center gap-3 border-b border-black/10 dark:border-white/10 pb-3">
+              <img :src="item.thumbnail" class="h-14 w-14 rounded-md object-cover" />
+              <div class="min-w-0">
+                <p class="text-sm font-semibold truncate">{{ item.title }}</p>
+                <p class="text-xs text-black/60 dark:text-white/60">USD ${{ item.price }}</p>
+                <div class="mt-2 flex items-center gap-2">
+                  <button class="px-2 border" @click="updateQty(item.id, -1)">-</button>
+                  <span class="text-sm">{{ item.quantity }}</span>
+                  <button class="px-2 border" @click="updateQty(item.id, 1)">+</button>
+                </div>
+              </div>
+              <button class="ml-auto text-xs text-red-500" @click="removeFromCart(item.id)">Remove</button>
+            </div>
+          </div>
+
+          <div v-if="cartItems.length" class="mt-6 flex items-center justify-between border-t border-black/10 dark:border-white/10 pt-4">
+            <span class="text-sm">Total</span>
+            <span class="font-semibold">USD ${{ cartTotal.toFixed(2) }}</span>
+          </div>
+        </aside>
+      </div>
+    </transition>
+
     <section v-for="slide in slides" :key="slide.id" class="relative min-h-screen flex items-center px-6 md:px-24 text-white">
       <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover">
         <source :src="slide.videoUrl" type="video/mp4" />
@@ -339,7 +433,6 @@ onUnmounted(() => {
       </div>
     </section>
 
-    <!-- After first section: consistent typography classes -->
     <section class="bg-white dark:bg-[#0f0f11] text-slate-900 dark:text-slate-100">
       <div class="min-h-screen w-full flex flex-col md:flex-row items-center">
         <div class="w-full md:w-1/2 h-[60vh] md:h-screen relative overflow-hidden">
@@ -409,7 +502,11 @@ onUnmounted(() => {
     </section>
 
     <section ref="collectionSectionRef" class="bg-white dark:bg-[#0f0f11] text-black dark:text-white">
-      <CollectionSectionApi :search-query="debouncedSearchQuery" :highlight-id="selectedProductId" />
+      <CollectionSectionApi
+        :search-query="debouncedSearchQuery"
+        :highlight-id="selectedProductId"
+        @add-to-cart="addToCart"
+      />
     </section>
 
     <section class="bg-white dark:bg-[#0f0f11] text-black dark:text-white border-t border-black/20 dark:border-white/15">

@@ -1,7 +1,6 @@
 <template>
   <section class="bg-white py-16 text-black dark:bg-[#0f0f11] dark:text-white">
     <div class="mx-auto w-[92%] max-w-7xl">
-      <!-- same heading system -->
       <h2 class="typo-heading uppercase">Explore Our Collection</h2>
       <p class="typo-body mt-3">
         Gems and jewellery curated for your collection.
@@ -29,8 +28,9 @@
           v-for="item in visibleItems"
           :id="`product-${item.id}`"
           :key="item.id"
-          class="rounded-2xl bg-[#efefef] dark:bg-[#1a1a1d] p-4 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg"
+          class="rounded-2xl bg-[#efefef] dark:bg-[#1a1a1d] p-4 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg cursor-pointer"
           :class="item.id === highlightId ? 'ring-4 ring-amber-400 shadow-2xl animate-pulse' : ''"
+          @click="openModal(item)"
         >
           <div class="overflow-hidden rounded-2xl bg-[#dcdcdc] dark:bg-[#222228]">
             <img
@@ -75,6 +75,35 @@
         </button>
       </div>
     </div>
+
+    <!-- Product modal -->
+    <transition name="fade">
+      <div v-if="activeProduct" class="fixed inset-0 z-[120] bg-black/50" @click.self="closeModal">
+        <div class="mx-auto mt-16 w-[92%] max-w-3xl rounded-3xl bg-white dark:bg-[#121214] p-6 shadow-xl">
+          <div class="flex items-center justify-between">
+            <h3 class="typo-heading !text-2xl">{{ activeProduct.title }}</h3>
+            <button @click="closeModal">✕</button>
+          </div>
+
+          <div class="mt-6 grid gap-6 md:grid-cols-2">
+            <img :src="activeProduct.thumbnail" class="w-full rounded-2xl object-cover" />
+            <div>
+              <p class="typo-body">Category: {{ activeProduct.category }}</p>
+              <p class="typo-body">Brand: {{ activeProduct.brand || 'N/A' }}</p>
+              <p class="typo-body">Stock: {{ activeProduct.stock }}</p>
+              <p class="typo-heading !text-2xl mt-4">USD ${{ activeProduct.price }}</p>
+
+              <button
+                class="mt-6 w-full rounded-full bg-black dark:bg-white text-white dark:text-black py-3 typo-btn hover:opacity-90"
+                @click="handleAddToCart"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </transition>
   </section>
 </template>
 
@@ -107,9 +136,14 @@ const props = defineProps<{
   highlightId?: number | null;
 }>();
 
+const emit = defineEmits<{
+  (e: 'add-to-cart', item: { id: number; title: string; price: number; thumbnail: string }): void;
+}>();
+
 const loading = ref(false);
 const items = ref<Product[]>([]);
 const showAll = ref(false);
+const activeProduct = ref<Product | null>(null);
 
 const customGemItems: Product[] = [
   {
@@ -188,6 +222,25 @@ const highlightId = computed(() => props.highlightId ?? null);
 function onImgError(e: Event): void {
   const target = e.target as HTMLImageElement;
   target.src = gem1;
+}
+
+function openModal(item: Product) {
+  activeProduct.value = item;
+}
+
+function closeModal() {
+  activeProduct.value = null;
+}
+
+function handleAddToCart() {
+  if (!activeProduct.value) return;
+  emit('add-to-cart', {
+    id: activeProduct.value.id,
+    title: activeProduct.value.title,
+    price: activeProduct.value.price,
+    thumbnail: activeProduct.value.thumbnail
+  });
+  closeModal();
 }
 
 watch(
