@@ -1,0 +1,348 @@
+The aim 01: Initialize a Vue 3 project with TypeScript and Vite.
+
+Actual prompt: How do I open and set up a new Vue 3 project with TypeScript using Vite in VS Code?
+
+
+The aim 02: Configure Vue project features (Router, Pinia, Prettier) to meet grading rubrics.
+
+Actual prompt: What features should I select in the Vue creation menu to ensure I hit the A+ criteria for my project?
+
+
+The aim 03: Selecting testing frameworks during project initialization.
+
+Actual prompt: Which E2E testing framework should I choose for a Vue 3 TypeScript project to ensure it meets the professional standards of my grading rubric?
+
+
+The aim 04: Finalizing project versioning and avoiding unstable builds.
+
+Actual prompt: Should I include experimental features like Vue 3.6 beta for a graded university SPA project?
+
+
+The aim 05: Install and configure Tailwind CSS within a Vite + Vue 3 project.
+
+Actual prompt: How do I install Tailwind CSS in my new Vue project and configure the tailwind.config.js file to work with .vue files?
+
+
+The aim 06: Setting up mandatory styling and version control.
+
+Actual prompt: How do I initialize Git for my Vue project and set up Tailwind CSS as the mandatory utility-first framework?
+
+
+The aim 07: Define strict TypeScript interfaces and establish initial API connectivity.
+
+Actual prompt: I am building a Gem Shop. Based on the DummyJSON product schema, can you provide a strict TypeScript interface and a Vue 3 Composition API script to fetch data from a specific category?
+
+
+The aim 08: Troubleshooting environment errors and establishing project structure.
+
+Actual prompt: I am getting a 'git is not recognized' error in VS Code. How do I install Git and organize my Vue 3 folders to meet the 'Component Architecture' requirements of my project?
+
+
+The aim 09: Verify Git installation to begin mandatory version control tracking.
+
+Actual prompt: How do I check the Git version on my PC to ensure the terminal recognizes the command?
+
+
+The aim 10: Troubleshooting Tailwind CSS initialization errors.
+
+Actual prompt: I am getting an 'npm error could not determine executable to run' when trying to initialize Tailwind. How do I force the creation of the config files?
+
+
+The aim 11: Manually configuring Tailwind CSS after CLI execution errors.
+
+Actual prompt: My terminal is not recognizing the tailwindcss init command even after installation. How can I manually create the tailwind.config.js and postcss.config.js files to ensure I meet the project's styling requirements?
+
+
+The aim 12: Manually configuring Tailwind CSS after CLI 'MODULE_NOT_FOUND' errors.
+
+Actual prompt: I am getting a 'MODULE_NOT_FOUND' error for Tailwind's CLI. How do I manually create and configure the tailwind.config.js and postcss.config.js files to meet my project's technical requirements?
+
+
+The aim 13: Defining strict TypeScript interfaces and initial API fetching logic.
+
+Actual prompt: I am building a Gem Shop named 'Evoryn' using Vue 3 and TypeScript. Can you provide a strict TypeScript interface based on the DummyJSON product schema and a fetch function to retrieve items from a specific category?
+
+
+The aim 14: Establishing the project architecture and strict TypeScript typing.
+
+Actual prompt: I am starting the 'Evoryn' Gem Shop project. Based on the requirements for a Vue 3 SPA using DummyJSON, can you help me structure my component hierarchy and define a strict TypeScript interface for a 'Gem' product?
+
+
+The aim 15: Linking the local development environment to a remote GitHub repository.
+
+Actual prompt: How do I link my local Vue project to a new GitHub repository and what is the best commit strategy to satisfy the 'Professional Git Activity' grading rubric?
+
+
+The aim 16: Troubleshooting Git 'fatal: not a git repository' error.
+
+Actual prompt: I got a fatal error when trying to add a GitHub remote. How do I ensure I'm in the right directory and successfully push my initial Vue 3 scaffold to GitHub?
+
+
+The aim 17: Configuring Git user identity for version control.
+
+Actual prompt: I got an 'Author identity unknown' error when trying to commit. How do I configure my Git username and email to start tracking my project history professionally?
+
+
+The aim 18: Verifying remote repository status and transitioning to component-based development.
+
+Actual prompt: My code is now on GitHub. What is the standard professional workflow for a Vue 3 project to ensure I meet the 'Component Architecture' and 'Type Safety' requirements for my grade?
+
+
+The aim 19: Troubleshooting Vue 3 local development server and rendering issues.
+
+Actual prompt: My App.vue is not running or displaying in the browser. How do I verify the dev server, check console errors, and ensure main.ts is correctly mounting the root component?
+
+
+The aim 20: Launching the Vite development server and verifying Tailwind CSS integration.
+
+Actual prompt: I am in the project directory in PowerShell. How do I start the development server and verify that my Tailwind CSS classes are rendering correctly on the screen?
+
+
+The aim 21: Resolving Tailwind CSS v4 PostCSS compatibility errors.
+
+Actual prompt: I am getting a PostCSS error saying tailwindcss has moved to a separate package. How do I update my installation to use @tailwindcss/postcss and fix the Vite internal server error?
+
+
+The aim 22: Resolving Python path interference in a Node.js environment.
+
+Actual prompt: I am getting a 'python.exe' error while trying to run my Vue 3 dev server. How do I clear this environment error and ensure my Vite server runs correctly?
+
+
+The aim 23: Creating a structured component architecture and defining strict TypeScript interfaces.
+
+Actual prompt: How do I create a reusable GemCard component in Vue 3 that uses TypeScript interfaces and Tailwind CSS for a professional jewelry shop UI?
+
+
+The aim 24: Implementing API data fetching with strict TypeScript interfaces and reusable components.
+
+Actual prompt: I have the dev server running. How do I fetch product data from DummyJSON, map it to a TypeScript interface, and display it in a responsive grid using a custom GemCard component?
+
+
+The aim 25: Fixing PostCSS compatibility issues between Tailwind v4 and Vite.
+
+Actual prompt: I am getting a PostCSS error saying tailwindcss has moved to a separate package. How do I update my postcss.config.js and main.css to be compatible with Tailwind v4?
+
+
+The aim 26: Migrating to Tailwind CSS v4 Vite plugin to resolve PostCSS legacy errors.
+
+Actual prompt: I am getting a persistent PostCSS error regarding tailwindcss moving to a separate package. How do I switch to the new @tailwindcss/vite plugin in my vite.config.ts to resolve this?
+
+
+The aim 27: Implementing strictly typed API data fetching and component-based rendering.
+
+Actual prompt: Now that the Tailwind v4 environment is stable, how do I define a TypeScript interface for my Gem products, fetch data from the DummyJSON API, and render it using a reusable GemCard component?
+
+
+The aim 28: Implementing reactive data fetching and responsive grid layout in the root App component.
+
+Actual prompt: I have the boilerplate running, but how do I implement the script logic to fetch products from DummyJSON and display them in a responsive Tailwind grid with loading states?
+
+
+The aim 29: Troubleshooting hot-module replacement (HMR) and browser caching issues.
+
+Actual prompt: I updated my App.vue code but the browser is still showing the old placeholder text. How do I force a hard refresh and verify if the Vite dev server is tracking my latest changes?
+
+
+The aim 30: Resolving Vue Router 'No match found' warnings and implementing view-based architecture.
+
+Actual prompt: I am getting a Vue Router warning for the root path. How do I properly set up a HomeView component and configure my router index to resolve this and meet the SPA routing requirements?
+
+
+The aim 31: Implementing SPA routing by moving main logic into View components.
+
+Actual prompt: I am getting a 'No match found' router warning. How do I move my fetching logic into a HomeView.vue and set up the RouterView in App.vue to properly handle the root path?
+
+
+The aim 32: Refactoring the root App component into a routing shell and migrating page-level logic to View components.
+
+Actual prompt: Should I replace everything in App.vue or just add to it? How do I properly set up App.vue as a wrapper for RouterView?
+
+
+The aim 33: Implementing real-time search filtering using Vue 3 computed properties.
+
+Actual prompt: I have the gems displaying. How do I implement a search bar that filters the displayed list in real-time using a computed property in Vue 3?
+
+
+The aim 34: Correcting component structure and integrating real-time search within the template.
+
+Actual prompt: I had my search input outside the template tags. How do I properly structure HomeView.vue so that the search bar is part of the UI and correctly triggers the computed filtering logic?
+
+
+The aim 35: Executing the refined project structure and verifying real-time search functionality.
+
+Actual prompt: I have updated my HomeView.vue with the corrected template structure. How do I properly restart the Vite server and verify that the search bar correctly filters the API data?
+
+
+The aim 36: Troubleshooting Tailwind CSS v4 injection and verifying Vite plugin configuration.
+
+Actual prompt: My data is showing up but the styling is missing. How do I ensure @tailwindcss/vite is correctly processing my utility classes so the UI matches my Tailwind code?
+
+
+The aim 37: Refactoring the entire UI from scratch using clean architecture and Tailwind v4.
+
+Actual prompt: I want to restart my interface from the beginning. Can you provide a clean, production-ready structure for App.vue and HomeView.vue that includes Tailwind v4 styling and API fetching?
+
+
+The aim 38: Resetting the UI and troubleshooting Tailwind v4 CSS injection.
+
+Actual prompt: My site is loading data but looks like unstyled HTML. How do I fix the Tailwind v4 pipeline and rebuild the HomeView with a dark, high-end gemstone vault theme?
+
+
+The aim 39: Resolving Tailwind v4 configuration silence by forcing a Vite plugin handshake.
+
+Actual prompt: My styling is still not applying after updating the code. How do I force-reinstall the @tailwindcss/vite plugin and clear the Vite cache to ensure my utility classes are processed?
+
+
+The aim 40: Resolving TypeScript casing conflicts and missing Vite-Vue module declarations.
+
+Actual prompt: I am getting 'Cannot find module @vitejs/vue' and 'File name differs only in casing' errors. How do I fix my folder naming and dependency tree to get the Tailwind v4 build working?
+
+
+The aim 41: Correcting npm 404 registry errors and aligning plugin imports with the correct package names.
+
+Actual prompt: I got a 404 error trying to install @vitejs/vue. What is the correct package name for the Vite Vue plugin, and how do I resolve the remaining CSS and casing errors in my build?
+
+
+The aim 42: Aligning vitest and vite configurations with the correct plugin naming conventions.
+
+Actual prompt: I am still getting a 'Cannot find module @vitejs/vue' error in vitest.config.ts. How do I update my testing configuration to use @vitejs/plugin-vue and resolve the remaining TypeScript module errors?
+
+
+The aim 43: Suppressing CSS linting warnings for Tailwind v4 and verifying the asset pipeline.
+
+Actual prompt: I am getting 'Unknown at rule @theme' warnings in VS Code. Is this a breaking error, and how do I configure my environment to recognize Tailwind v4 syntax while ensuring the CSS is correctly imported?
+
+
+The aim 44: Implementing a persistent dark mode toggle using Vue 3 reactivity and Tailwind v4.
+
+Actual prompt: How do I create a fresh start for my project that includes a button to toggle between dark and light modes, saves the user's preference in localStorage, and applies the changes globally using Tailwind CSS?
+
+
+The aim 45: Troubleshooting cache persistence and verifying DOM-level class injection for theme toggling.
+
+Actual prompt: I updated my App.vue with the dark mode toggle, but the browser is still showing the old version. How do I clear the Vite cache and verify in the browser inspect tool that the 'dark' class is being applied correctly?
+
+
+The aim 46: Resolving browser autofill warnings and implementing a reactive theme toggle.
+
+Actual prompt: I'm getting a 'form field element has neither an id nor a name attribute' warning. How do I fix this while starting fresh with a persistent Dark Mode toggle in Vue 3 and Tailwind v4?
+
+
+The aim 47: Troubleshooting Vite import errors and resolving "Port in use" conflicts.
+
+Actual prompt: I'm getting an 'Internal server error: Failed to resolve import "./router" from "src/main.ts"'. How do I update my entry file to either include the router properly or remove it for a single-page setup?
+
+
+The aim 48: Reconstructing the missing router directory and resolving Vite import analysis errors.
+
+Actual prompt: My router folder was missing. How do I recreate the router/index.ts file and configure it to work with a fresh HomeView.vue for my project?
+
+
+The aim 49: Debugging "White Screen of Death" by verifying RouterView implementation and clearing Vite's internal cache.
+
+Actual prompt: I am getting a blank white page after setting up the router. How do I troubleshoot the browser console and ensure my App.vue is correctly configured to render routed components?
+
+
+The aim 50: Resolving 'Uncaught SyntaxError: does not provide an export named default' by correcting ES module exports in the router configuration.
+
+Actual prompt: I'm getting a SyntaxError saying my router doesn't provide a default export. How do I properly export the router instance and import it into main.ts to fix the blank page?
+
+
+The aim 51: Refactoring the root component into a routing shell and migrating view-specific logic to the views directory.
+
+Actual prompt: I have the dark mode and search logic in App.vue. How do I move this to HomeView.vue and set up App.vue as a proper RouterView container?
+
+
+The aim 52: Debugging Tailwind v4 dark mode selector issues and ensuring global CSS application.
+
+Actual prompt: My dark mode toggle is clicking but the background isn't changing. How do I properly configure the .dark selector in Tailwind v4 and verify that the HTML class is being injected correctly?
+
+
+The aim 53: Correcting Tailwind utility application to ensure background colors respond to theme state changes.
+
+Actual prompt: The 'dark' class is appearing on the HTML tag, but the page stays dark. How do I fix my Tailwind classes so they switch between light and dark backgrounds correctly?
+
+
+The aim 54: Finalizing the Tailwind v4 CSS bridge and troubleshooting plugin-level stylesheet injection.
+
+Actual prompt: The 'dark' class is present on the HTML tag, but the background remains unchanged. How do I verify that the @tailwindcss/vite plugin is correctly processing my main.css and applying styles to the .dark selector?
+
+
+The aim 55: Resolving persistent background styling by auditing utility class overrides and index.html attributes.
+
+Actual prompt: My background stays dark regardless of the toggle state. How do I audit my index.html and root components to ensure no hard-coded dark mode classes are overriding my reactive theme logic?
+
+
+The aim 56: Restoring the project's entry point by recreating the root index.html file.
+
+Actual prompt: I don't have an index.html file in my project root. How do I recreate the standard Vite index.html and link it to my src/main.ts so that my Tailwind styles and dark mode logic can actually render?
+
+
+The aim 57: Forcing a CSS override to diagnose persistent dark mode and verifying asset pipeline connectivity.
+
+Actual prompt: Even with a new index.html, my background remains dark. How do I use !important CSS flags to test if my stylesheet is being loaded, and what browser settings could be forcing dark mode?
+
+
+The aim 58: Overriding system-level color scheme preferences to enable manual theme toggling via Vue state.
+
+Actual prompt: My toggle button is being ignored because my browser is set to dark mode. How do I configure my CSS and Vue logic to prioritize the manual '.dark' class over the system 'prefers-color-scheme' setting?
+
+
+The aim 59: Validating event listener connectivity and troubleshooting CSS specificity conflicts in a Vue 3 environment.
+
+Actual prompt: My theme toggle is still not responding. How do I use browser alerts and CSS !important flags to determine if the issue lies within the Vue event handling or the Tailwind stylesheet hierarchy?
+
+
+The aim 60: Moving from environment troubleshooting to feature development by implementing a responsive product grid and data binding.
+
+Actual prompt: Since the theme toggle is being difficult, let's move forward. How do I create a reactive array of gem data and display it in a 3-column responsive grid using Vue's v-for directive and Tailwind CSS?
+
+
+The aim 61: Implementing a slide-out navigation drawer with reactive state management and backdrop filters.
+
+Actual prompt: I need to add a sidebar menu to the top left of my page. It should include Home, Collection, Museum, Services, and other necessary fields, and use a slide-in animation when triggered.
+
+
+The aim 62: Structural refactoring of the HomeView template to integrate sidebar navigation and theme controls into a unified header.
+
+Actual prompt: I need to clean up my HomeView template to include the hamburger menu, site title, search bar, and theme toggle in a single organized header, while ensuring the sidebar drawer works correctly.
+
+
+The aim 63: Establishing brand identity through multi-position logo placement and CSS animations.
+
+Actual prompt: I want to add my logo to both the header and the center of the home page. How do I implement a responsive hero section with a centered logo and a smaller branding icon in the navigation bar?
+
+
+The aim 64: Understanding asset management in Vite by differentiating between static imports and dynamic data binding.
+
+Actual prompt: How do I add images to my Vue project? I need to know the correct pathing for logos in the assets folder and how to bind images dynamically in a v-for loop.
+
+
+The aim 65: Troubleshooting Vite path alias resolution and asset import failures.
+
+Actual prompt: I'm getting a 'Failed to resolve import @/assets/logo.png' error. How do I fix my file pathing or configure the Vite alias to correctly find my images?
+
+
+The aim 66: Aligning global navigation elements and creating a centered hero branding section.
+
+Actual prompt: I want my logo in the header and also large in the middle of the page. How do I fix my HTML structure so the search and theme toggle are top-aligned while the hero logo is centered in the main content?
+
+
+The aim 67: Replicating a high-end symmetrical header layout using Tailwind CSS Grid and flex alignment.
+
+Actual prompt: I want a centered logo with 'MENU' on the left and search/theme icons on the right, matching a luxury brand aesthetic. How do I use a 3-column grid to ensure perfect symmetry?
+
+
+The aim 68: Restoring missing template components and resolving asset pathing for a synchronized video slider and navigation drawer.
+
+Actual prompt: My logo isn't showing and the menu button doesn't do anything. How do I fix the image binding and re-add the sidebar component to my cinematic video landing page?
+
+
+The aim 69: Implementing a high-contrast, asymmetrical split-screen layout for brand storytelling.
+
+Actual prompt: I want to add a white-background section after my videos with an image on the left and a story on the right, matching the Patek Philippe 'Our Values' section style.
+
+
+The aim 70: Creating a mirrored split-layout section with a custom color palette and responsive order management.
+
+Actual prompt: I want to add an 'Innovation and Tradition' section following the previous story section. It should have the text on the left, an image with rounded corners on the right, and two different styled buttons.
