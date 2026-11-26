@@ -4,7 +4,7 @@ Reviewed the default branch on 26 November 2026. This is a code review of the re
 
 ## Current state
 
-Evoryn is a Vue 3 + TypeScript + Vite single-page storefront deployed as a static GitHub Pages site. It currently demonstrates a cinematic home page, a product collection, search preview, product detail modal, theme toggle, and an in-memory cart.
+Evoryn is a Vue 3 + TypeScript + Vite single-page storefront deployed as a static GitHub Pages site. It currently demonstrates a cinematic home page, a product collection backed by one shared sample catalog, search preview, product detail modal, theme toggle, and a guest cart persisted in browser storage.
 
 The current implementation is a prototype. It is not ready to accept real customer orders or payments.
 
@@ -32,7 +32,8 @@ The current implementation is a prototype. It is not ready to accept real custom
 ### Phase 1 — establish a reliable storefront baseline
 
 - The README and pull request compile checks now describe the actual project. The Playwright starter assertion still needs replacement.
-- The visible collection and search now use only the four gemstone sample fixtures; connect them to a trusted catalog before launch.
+- The visible collection and search now use one shared module containing only four gemstone sample fixtures; connect it to a trusted catalog before launch.
+- The guest cart now survives a refresh in browser storage; build the server-backed checkout separately and never trust the saved client prices.
 - Add product types and a single catalog service boundary so a real backend can replace demo fixtures without spreading fetch logic through components.
 - Optimize video delivery: provide poster images, defer/offload large videos, respect reduced-motion, and avoid downloading both hero videos eagerly.
 - Add functional store navigation, product detail routes, cart persistence, quantity/stock constraints, and accessible dialogs.
