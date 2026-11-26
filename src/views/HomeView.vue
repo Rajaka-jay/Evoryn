@@ -445,9 +445,9 @@ onUnmounted(() => {
               Owned by the same family since its inception, our vault benefits from full creative freedom.
             </p>
 
-            <button class="px-10 md:px-12 py-3 md:py-4 border border-slate-900 dark:border-slate-100 text-slate-900 dark:text-slate-100 rounded-full hover:bg-slate-900 hover:text-white dark:hover:bg-slate-100 dark:hover:text-black transition-all duration-500 typo-btn">
+            <a href="#values" class="inline-block px-10 md:px-12 py-3 md:py-4 border border-slate-900 dark:border-slate-100 text-slate-900 dark:text-slate-100 rounded-full hover:bg-slate-900 hover:text-white dark:hover:bg-slate-100 dark:hover:text-black transition-all duration-500 typo-btn">
               Our Values
-            </button>
+            </a>
           </div>
         </div>
       </div>
@@ -466,9 +466,9 @@ onUnmounted(() => {
               We nurture a tradition of innovation, pushing the boundaries of gemstone artistry through advanced research and rare handcrafts.
             </p>
 
-            <button class="px-10 py-3 md:py-4 border border-slate-900 dark:border-slate-100 text-slate-900 dark:text-slate-100 rounded-full hover:bg-slate-900 hover:text-white dark:hover:bg-slate-100 dark:hover:text-black transition-all duration-500 typo-btn">
-              Advanced Research
-            </button>
+            <a href="#collection" class="inline-block px-10 py-3 md:py-4 border border-slate-900 dark:border-slate-100 text-slate-900 dark:text-slate-100 rounded-full hover:bg-slate-900 hover:text-white dark:hover:bg-slate-100 dark:hover:text-black transition-all duration-500 typo-btn">
+              Explore Collection
+            </a>
           </div>
         </div>
 
