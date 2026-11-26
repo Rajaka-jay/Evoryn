@@ -124,13 +124,6 @@ interface Product {
   thumbnail: string;
 }
 
-interface ProductsResponse {
-  products: Product[];
-  total: number;
-  skip: number;
-  limit: number;
-}
-
 const props = defineProps<{
   searchQuery?: string;
   highlightId?: number | null;
@@ -195,10 +188,8 @@ function toStars(rating: number): number {
 async function loadProducts(): Promise<void> {
   loading.value = true;
   try {
-    const res = await fetch('https://dummyjson.com/products?limit=8&skip=0');
-    const data = (await res.json()) as ProductsResponse;
-    items.value = [...customGemItems, ...(data.products ?? [])];
-  } catch {
+    // Sample fixtures keep the prototype focused on gemstones.
+    // Connect a trusted catalog service before using this as a real shop.
     items.value = [...customGemItems];
   } finally {
     loading.value = false;
