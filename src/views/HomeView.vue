@@ -52,6 +52,35 @@ const isDark = computed(() => theme.value === 'dark');
 
 const cartOpen = ref(false);
 const cartItems = ref<CartItem[]>([]);
+const CART_STORAGE_KEY = 'evoryn-cart-v1';
+
+function readStoredCart(): CartItem[] {
+  if (typeof window === 'undefined') return [];
+
+  try {
+    const parsed: unknown = JSON.parse(localStorage.getItem(CART_STORAGE_KEY) ?? '[]');
+    if (!Array.isArray(parsed)) return [];
+
+    return parsed
+      .filter((value): value is CartItem => {
+        if (typeof value !== 'object' || value === null) return false;
+        const item = value as Partial<CartItem>;
+        return Number.isSafeInteger(item.id)
+          && typeof item.title === 'string'
+          && item.title.length <= 240
+          && Number.isFinite(item.price)
+          && (item.price ?? -1) >= 0
+          && typeof item.thumbnail === 'string'
+          && item.thumbnail.length <= 2048
+          && Number.isSafeInteger(item.quantity)
+          && (item.quantity ?? 0) > 0
+          && (item.quantity ?? 100) <= 99;
+      })
+      .slice(0, 50);
+  } catch {
+    return [];
+  }
+}
 
 const cartCount = computed(() =>
   cartItems.value.reduce((sum, item) => sum + item.quantity, 0)
@@ -186,7 +215,21 @@ watch(searchQuery, (value) => {
   }, 300);
 });
 
+watch(
+  cartItems,
+  (items) => {
+    try {
+      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
+    } catch {
+      // The cart still works for this session when browser storage is unavailable.
+    }
+  },
+  { deep: true }
+);
+
 onMounted(() => {
+  cartItems.value = readStoredCart();
+
   const saved = localStorage.getItem('theme') as 'light' | 'dark' | null;
   if (saved === 'dark' || saved === 'light') {
     applyTheme(saved);
