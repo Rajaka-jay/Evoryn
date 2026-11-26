@@ -11,15 +11,9 @@ import gemGallery3 from '@/assets/gem3.png';
 
 import CollectionSectionApi from '@/components/CollectionSectionApi.vue';
 import SiteFooter from '@/components/SiteFooter.vue';
+import { sampleGemProducts, type GemProduct } from '@/data/catalog';
 
-interface SearchProduct {
-  id: number;
-  title: string;
-  category: string;
-  brand?: string;
-  price: number;
-  thumbnail: string;
-}
+type SearchProduct = Pick<GemProduct, 'id' | 'title' | 'category' | 'brand' | 'price' | 'thumbnail'>;
 
 interface CartItem {
   id: number;
@@ -83,41 +77,6 @@ const slides = [
       'Purity of line and understated elegance. The very essence of the round wristwatch.',
     videoUrl: videoTwo,
     buttonText: 'EXPLORE COLLECTION'
-  }
-];
-
-const customGemItems: SearchProduct[] = [
-  {
-    id: 10001,
-    title: 'Blue Sapphire (Ceylon) - 2.10ct',
-    category: 'gemstone',
-    brand: 'Evoryn Gems',
-    price: 1250,
-    thumbnail: gemGallery1
-  },
-  {
-    id: 10002,
-    title: 'Royal Blue Sapphire Ring - 18K',
-    category: 'jewellery',
-    brand: 'Evoryn Fine',
-    price: 2200,
-    thumbnail: gemGallery2
-  },
-  {
-    id: 10003,
-    title: 'Pigeon Blood Ruby - 1.45ct',
-    category: 'gemstone',
-    brand: 'Evoryn Gems',
-    price: 1980,
-    thumbnail: gemGallery3
-  },
-  {
-    id: 10004,
-    title: 'Colombian Emerald Pendant',
-    category: 'jewellery',
-    brand: 'Evoryn Fine',
-    price: 1475,
-    thumbnail: gemGallery2
   }
 ];
 
@@ -194,7 +153,7 @@ function updateQty(id: number, delta: number) {
 async function loadSearchPool(): Promise<void> {
   // Keep search results aligned with the sample gemstone collection.
   // Replace this fixture with the trusted catalog API before accepting orders.
-  searchPool.value = [...customGemItems];
+  searchPool.value = sampleGemProducts;
 }
 
 const searchPreviewItems = computed(() => {
