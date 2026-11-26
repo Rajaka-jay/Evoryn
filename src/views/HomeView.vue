@@ -32,11 +32,11 @@ const currentSection = ref(0);
 const isHeaderBlack = computed(() => currentSection.value >= 2);
 
 const menuItems = [
-  { name: 'Home' },
-  { name: 'Collection' },
-  { name: 'Museum' },
-  { name: 'Services' },
-  { name: 'Contact' }
+  { name: 'Home', href: '#home' },
+  { name: 'Collection', href: '#collection' },
+  { name: 'Craftsmanship', href: '#craftsmanship' },
+  { name: 'Our Values', href: '#values' },
+  { name: 'Contact', href: '#contact' }
 ];
 
 const isSearchOpen = ref(false);
@@ -260,6 +260,9 @@ onUnmounted(() => {
     <div class="fixed top-0 left-0 w-full h-16 z-[60]" @mouseenter="onTopHoverEnter" @mouseleave="onTopHoverLeave"></div>
 
     <aside
+      id="site-menu"
+      aria-label="Main menu"
+      :aria-hidden="!isMenuOpen"
       :class="isMenuOpen ? 'translate-x-0' : '-translate-x-full'"
       class="fixed top-0 left-0 h-full w-80 bg-black/95 backdrop-blur-xl z-[100] transition-transform duration-700 ease-in-out border-r border-white/10 p-12 text-white"
     >
@@ -268,7 +271,7 @@ onUnmounted(() => {
       </button>
 
       <nav class="flex flex-col gap-8">
-        <a v-for="item in menuItems" :key="item.name" href="#" class="text-3xl font-light hover:text-amber-400 transition-colors">
+        <a v-for="item in menuItems" :key="item.name" :href="item.href" @click="isMenuOpen = false" class="text-3xl font-light hover:text-amber-400 transition-colors">
           {{ item.name }}
         </a>
       </nav>
@@ -282,7 +285,7 @@ onUnmounted(() => {
       class="fixed top-0 left-0 w-full z-50 grid grid-cols-3 items-center px-6 md:px-12 py-6 md:py-8 transition-all duration-500"
     >
       <div class="flex items-center">
-        <button @click="isMenuOpen = true" class="flex items-center gap-3 group cursor-pointer">
+        <button @click="isMenuOpen = true" :aria-expanded="isMenuOpen" aria-controls="site-menu" class="flex items-center gap-3 group cursor-pointer">
           <div class="flex flex-col gap-1.5">
             <div class="w-6 h-0.5 bg-current"></div>
             <div class="w-6 h-0.5 bg-current"></div>
@@ -408,7 +411,7 @@ onUnmounted(() => {
       </div>
     </transition>
 
-    <section v-for="slide in slides" :key="slide.id" class="relative min-h-screen flex items-center px-6 md:px-24 text-white">
+    <section v-for="slide in slides" :id="slide.id === 1 ? 'home' : 'story'" :key="slide.id" class="relative min-h-screen flex items-center px-6 md:px-24 text-white">
       <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover">
         <source :src="slide.videoUrl" type="video/mp4" />
       </video>
@@ -417,14 +420,14 @@ onUnmounted(() => {
       <div class="relative z-10 max-w-2xl">
         <h2 class="text-4xl md:text-7xl font-light tracking-tight mb-6">{{ slide.title }}</h2>
         <p class="text-white/90 text-base md:text-lg leading-relaxed mb-8 font-light italic">{{ slide.description }}</p>
-        <button class="px-8 py-3 border border-white/60 rounded-full hover:bg-white hover:text-black transition-all duration-500 text-[10px] tracking-[0.2em] font-bold uppercase">
+        <a :href="slide.id === 1 ? '#craftsmanship' : '#collection'" class="inline-block px-8 py-3 border border-white/60 rounded-full hover:bg-white hover:text-black transition-all duration-500 text-[10px] tracking-[0.2em] font-bold uppercase">
           {{ slide.buttonText }}
-        </button>
+        </a>
       </div>
     </section>
 
     <section class="bg-white dark:bg-[#0f0f11] text-slate-900 dark:text-slate-100">
-      <div class="min-h-screen w-full flex flex-col md:flex-row items-center">
+      <div id="craftsmanship" class="min-h-screen w-full flex flex-col md:flex-row items-center">
         <div class="w-full md:w-1/2 h-[60vh] md:h-screen relative overflow-hidden">
           <img :src="manufactureImg" class="w-full h-full object-cover" />
         </div>
@@ -449,7 +452,7 @@ onUnmounted(() => {
         </div>
       </div>
 
-      <div class="min-h-screen w-full flex flex-col md:flex-row items-center">
+      <div id="values" class="min-h-screen w-full flex flex-col md:flex-row items-center">
         <div class="w-full md:w-1/2 h-auto md:h-screen flex flex-col justify-center px-6 md:px-24 py-12 md:py-0 order-2 md:order-1">
           <div class="max-w-lg">
             <span class="typo-label mb-4 block">A Long-Term Vision</span>
@@ -491,7 +494,7 @@ onUnmounted(() => {
       </div>
     </section>
 
-    <section ref="collectionSectionRef" class="bg-white dark:bg-[#0f0f11] text-black dark:text-white">
+    <section id="collection" ref="collectionSectionRef" class="bg-white dark:bg-[#0f0f11] text-black dark:text-white">
       <CollectionSectionApi
         :search-query="debouncedSearchQuery"
         :highlight-id="selectedProductId"
@@ -499,7 +502,7 @@ onUnmounted(() => {
       />
     </section>
 
-    <section class="bg-white dark:bg-[#0f0f11] text-black dark:text-white border-t border-black/20 dark:border-white/15">
+    <section id="contact" class="bg-white dark:bg-[#0f0f11] text-black dark:text-white border-t border-black/20 dark:border-white/15">
       <div>
         <SiteFooter />
       </div>
