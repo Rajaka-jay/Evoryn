@@ -1,73 +1,51 @@
 # Evoryn
 
-This template should help get you started developing with Vue 3 in Vite.
+Evoryn is a Vue 3 + TypeScript storefront prototype for a gemstone and jewellery brand.
 
-## Recommended IDE Setup
+## Current capabilities
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+- Responsive, video-led brand landing page
+- Sample gemstone collection and product detail modal
+- Search preview
+- In-memory cart demonstration
+- Light/dark theme toggle
+- Static GitHub Pages deployment
 
-## Recommended Browser Setup
+## Production status
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+This repository is a frontend prototype. It does **not** currently include a commerce backend, a trusted product catalog, customer accounts, persistent carts, checkout, payment processing, order management, or inventory control. The current catalog includes sample data and unrelated demo API products. Do not use it to accept real orders.
 
-## Type Support for `.vue` Imports in TS
+See [docs/PRODUCTION_READINESS.md](docs/PRODUCTION_READINESS.md) for the code review, launch blockers, implementation order, and decisions needed for a real store.
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+## Requirements
 
-## Customize configuration
+- Node.js 20.19+ or 22.12+
+- npm
 
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
+## Local development
 
 ```sh
+npm ci
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+## Quality checks
 
 ```sh
-npm run build
+npm run type-check
+npm run build-only
 ```
 
-### Run Unit Tests with [Vitest](https://vitest.dev/)
+The pull request workflow runs these compile checks. The existing Playwright test is a stale Vue starter assertion and must be replaced with real storefront journeys before it can be used as a release gate.
 
-```sh
-npm run test:unit
-```
+## Deployment
 
-### Run End-to-End Tests with [Playwright](https://playwright.dev)
+The existing GitHub Pages workflow builds the Vite app and publishes `dist/` from pushes to `main`. This serves static frontend files only. GitHub Pages does not provide trusted order, inventory, account, or payment processing.
 
-```sh
-# Install browsers for the first run
-npx playwright install
+## Stack
 
-# When testing on CI, must build the project first
-npm run build
-
-# Runs the end-to-end tests
-npm run test:e2e
-# Runs the tests only on Chromium
-npm run test:e2e -- --project=chromium
-# Runs the tests of a specific file
-npm run test:e2e -- tests/example.spec.ts
-# Runs the tests in debug mode
-npm run test:e2e -- --debug
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+- Vue 3 and Vue Router
+- TypeScript
+- Vite
+- Tailwind CSS v4
+- Vitest and Playwright (test foundations)
