@@ -13,7 +13,7 @@ Evoryn is a Vue 3 + TypeScript storefront prototype for a gemstone and jewellery
 
 ## Production status
 
-This repository is a frontend prototype. It does **not** currently include a commerce backend, a trusted product catalog, customer accounts, persistent carts, checkout, payment processing, order management, or inventory control. The current catalog includes sample data and unrelated demo API products. Do not use it to accept real orders.
+This repository is a frontend prototype. It does **not** currently include a commerce backend, a trusted product catalog, customer accounts, persistent carts, checkout, payment processing, order management, or inventory control. The catalog uses sample gemstone fixtures only; its products, prices, and stock are still demo data. Do not use it to accept real orders.
 
 See [docs/PRODUCTION_READINESS.md](docs/PRODUCTION_READINESS.md) for the code review, launch blockers, implementation order, and decisions needed for a real store.
 
