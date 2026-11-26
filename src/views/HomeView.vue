@@ -399,10 +399,10 @@ onUnmounted(() => {
     <!-- Cart drawer -->
     <transition name="fade">
       <div v-if="cartOpen" class="fixed inset-0 z-[120] bg-black/40" @click.self="cartOpen = false">
-        <aside class="absolute right-0 top-0 h-full w-[90vw] max-w-md bg-white dark:bg-[#121214] p-6 shadow-xl">
+        <aside role="dialog" aria-modal="true" aria-labelledby="cart-title" class="absolute right-0 top-0 h-full w-[90vw] max-w-md bg-white dark:bg-[#121214] p-6 shadow-xl">
           <div class="flex items-center justify-between">
-            <h3 class="typo-heading !text-2xl">Your Cart</h3>
-            <button class="text-sm" @click="cartOpen = false">✕</button>
+            <h3 id="cart-title" class="typo-heading !text-2xl">Your Cart</h3>
+            <button type="button" aria-label="Close cart" class="text-sm" @click="cartOpen = false">✕</button>
           </div>
 
           <div v-if="cartItems.length === 0" class="mt-6 text-sm text-black/60 dark:text-white/60">
@@ -416,12 +416,12 @@ onUnmounted(() => {
                 <p class="text-sm font-semibold truncate">{{ item.title }}</p>
                 <p class="text-xs text-black/60 dark:text-white/60">USD ${{ item.price }}</p>
                 <div class="mt-2 flex items-center gap-2">
-                  <button class="px-2 border" @click="updateQty(item.id, -1)">-</button>
+                  <button type="button" :aria-label="`Decrease quantity of ${item.title}`" class="px-2 border" @click="updateQty(item.id, -1)">-</button>
                   <span class="text-sm">{{ item.quantity }}</span>
-                  <button class="px-2 border" @click="updateQty(item.id, 1)">+</button>
+                  <button type="button" :aria-label="`Increase quantity of ${item.title}`" class="px-2 border" @click="updateQty(item.id, 1)">+</button>
                 </div>
               </div>
-              <button class="ml-auto text-xs text-red-500" @click="removeFromCart(item.id)">Remove</button>
+              <button type="button" :aria-label="`Remove ${item.title} from cart`" class="ml-auto text-xs text-red-500" @click="removeFromCart(item.id)">Remove</button>
             </div>
           </div>
 
