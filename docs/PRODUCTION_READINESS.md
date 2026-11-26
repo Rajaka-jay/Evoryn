@@ -13,7 +13,7 @@ The current implementation is a prototype. It is not ready to accept real custom
 ### Release blockers
 
 1. **No trusted commerce backend.** Products and prices are embedded in browser code or loaded from DummyJSON. A customer can alter browser state. There is no server-side price/stock validation, inventory reservation, order record, or payment confirmation.
-2. **Catalog contains demo merchandise.** The collection combines four sample gemstone products with unrelated DummyJSON products. Their price, stock, and rating values are demonstrations rather than a merchant catalog.
+2. **Catalog contains demo merchandise.** This branch removes the unrelated DummyJSON products from the collection and search. Four hard-coded sample gemstone items remain; their price, stock, and rating values are demonstrations rather than a merchant catalog.
 3. **Cart is temporary and has no checkout.** Cart state is held in Vue memory and disappears on refresh. The cart drawer has no address, delivery, payment, or order-confirmation flow.
 4. **No operations interface.** There is no protected product/inventory management, order fulfillment, refunds, or customer support workflow.
 5. **Business rules are undecided.** Currency, delivery regions and fees, tax handling, returns, payment provider, and order notifications need merchant decisions before those flows can be implemented correctly.
@@ -31,8 +31,8 @@ The current implementation is a prototype. It is not ready to accept real custom
 
 ### Phase 1 — establish a reliable storefront baseline
 
-- Replace the starter README and test expectations with project-accurate documentation and checks.
-- Remove third-party demo products from the visible gemstone catalog.
+- The README and pull request compile checks now describe the actual project. The Playwright starter assertion still needs replacement.
+- The visible collection and search now use only the four gemstone sample fixtures; connect them to a trusted catalog before launch.
 - Add product types and a single catalog service boundary so a real backend can replace demo fixtures without spreading fetch logic through components.
 - Optimize video delivery: provide poster images, defer/offload large videos, respect reduced-motion, and avoid downloading both hero videos eagerly.
 - Add functional store navigation, product detail routes, cart persistence, quantity/stock constraints, and accessible dialogs.
