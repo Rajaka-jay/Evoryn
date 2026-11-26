@@ -35,6 +35,7 @@ const isHeaderBlack = computed(() => currentSection.value >= 2);
 
 const menuItems = [
   { name: 'Home', href: '#home' },
+  { name: 'Shop the collection', href: '/Evoryn/#/shop' },
   { name: 'Collection', href: '#collection' },
   { name: 'Craftsmanship', href: '#craftsmanship' },
   { name: 'Our Values', href: '#values' },

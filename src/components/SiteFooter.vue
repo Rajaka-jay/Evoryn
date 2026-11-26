@@ -1,69 +1,14 @@
 <template>
-  <footer class="bg-[#d9d9d9] border-t border-black/10 mt-0">
-    <div class="mx-auto w-[92%] max-w-7xl py-12">
-      <div class="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
-        <!-- Brand -->
-        <div>
-          <h3 class="text-5xl font-semibold tracking-wide">EVORYN.LK</h3>
-          <ul class="mt-5 space-y-2 text-sm">
-            <li>📍 No. 314, Hapugala, Galle</li>
-            <li>📞 +94 702154334</li>
-            <li>📧 care@evoryn.lk</li>
-          </ul>
-
-          <p class="mt-5 text-sm">WHAT’SAPP Us..</p>
-          <div class="mt-2 flex gap-3 text-xl">
-            <span>📘</span><span>▶️</span><span>📷</span>
-          </div>
-        </div>
-
-        <!-- Shop -->
-        <div>
-          <h4 class="text-xl font-semibold">SHOP</h4>
-          <ul class="mt-4 space-y-2 text-sm">
-            <li>• HOME</li>
-            <li>• F.A.Q</li>
-            <li>• ABOUT US</li>
-            <li>• CORPORATE SALES</li>
-            <li>• CAREERS</li>
-            <li>• MY ACCOUNT</li>
-          </ul>
-        </div>
-
-        <!-- Support -->
-        <div>
-          <h4 class="text-xl font-semibold">SUPPORT</h4>
-          <ul class="mt-4 space-y-2 text-sm">
-            <li>• CONTACT US</li>
-            <li>• AFTER SALES SERVICE</li>
-            <li>• TERMS OF SERVICE</li>
-            <li>• PRIVACY POLICY</li>
-            <li>• RETURN POLICY</li>
-          </ul>
-        </div>
-
-        <!-- Newsletter -->
-        <div>
-          <h4 class="text-xl font-semibold">SUBSCRIBE TO OUR NEWSLETTER</h4>
-          <p class="mt-2 text-sm">STAY IN THE LOOP!</p>
-          <p class="mt-3 text-sm">JOIN OUR NEWSLETTER FOR EXCLUSIVE UPDATES AND OFFERS.</p>
-
-          <form class="mt-4 flex overflow-hidden border border-black" @submit.prevent>
-            <div class="flex items-center px-3">✉️</div>
-            <input
-              type="email"
-              placeholder="Email"
-              class="w-full bg-transparent px-2 py-2 text-sm outline-none"
-              required
-            />
-            <button type="submit" class="border-l border-black px-4 hover:bg-black hover:text-white transition">
-              →
-            </button>
-          </form>
-        </div>
-      </div>
-
-      <p class="mt-12 text-center text-xs">© 2026 EVORYN.LK, All Rights Reserved.</p>
+  <footer class="evoryn-footer">
+    <div class="footer-main">
+      <div class="footer-brand"><span class="seal">E</span><div><strong>EVORYN</strong><small>GEMS WITH A SENSE OF PLACE</small></div><p>Rooted in Ceylon. Selected for a lifetime.</p></div>
+      <div><h3>DISCOVER</h3><RouterLink to="/">Our story</RouterLink><RouterLink to="/shop">The collection</RouterLink><a href="/#craftsmanship">Our craft</a></div>
+      <div><h3>PERSONAL SERVICE</h3><a href="mailto:care@evoryn.lk">care@evoryn.lk</a><a href="tel:+94702154334">+94 70 215 4334</a><span>Hapugala, Galle · Sri Lanka</span></div>
+      <div class="footer-note"><p>Each stone has a story.<br/><em>We would be glad to help you find yours.</em></p><RouterLink to="/shop">Explore the collection <span>↗</span></RouterLink></div>
     </div>
+    <div class="footer-bottom"><span>© 2026 EVORYN · ALL RIGHTS RESERVED</span><span>CEYLON, SRI LANKA</span><RouterLink to="/admin/login">STUDIO ACCESS</RouterLink></div>
   </footer>
 </template>
+<style scoped>
+.evoryn-footer{background:#11110f;color:#e9e3d6;padding:68px clamp(24px,7vw,100px) 25px;border-top:1px solid #b9975540}.footer-main{display:grid;grid-template-columns:1.3fr .8fr 1fr 1.2fr;gap:40px;max-width:1300px;margin:auto;padding-bottom:55px}.footer-brand{display:grid;grid-template-columns:40px auto;gap:0 12px;align-content:start}.seal{grid-row:span 2;width:38px;height:38px;display:grid;place-items:center;border:1px solid #b99755;border-radius:50%;font:24px Georgia,serif;color:#d6b56f}.footer-brand strong{font:17px Georgia,serif;letter-spacing:.18em}.footer-brand small{display:block;color:#9d927b;font:8px Arial,sans-serif;letter-spacing:.13em;margin-top:5px}.footer-brand p{grid-column:1/-1;color:#a7a093;font:13px Georgia,serif;margin-top:24px}.footer-main h3{font:8px Arial,sans-serif;letter-spacing:.18em;color:#c7a35f;margin:2px 0 18px}.footer-main a,.footer-main>div>span{display:block;margin:11px 0;color:#b9b2a5;text-decoration:none;font:11px Arial,sans-serif}.footer-main a:hover,.footer-bottom a:hover{color:#e4c782}.footer-note{padding-left:22px;border-left:1px solid #c7a35f66}.footer-note p{font:18px/1.5 Georgia,serif;color:#dfd5c3}.footer-note em{color:#a79c89}.footer-note a{color:#d6b56f}.footer-note a span{margin-left:8px}.footer-bottom{max-width:1300px;margin:auto;padding-top:20px;border-top:1px solid #ffffff20;display:flex;justify-content:space-between;gap:14px;color:#827b6f;font:8px Arial,sans-serif;letter-spacing:.12em}.footer-bottom a{color:#9d927b;text-decoration:none}@media(max-width:780px){.footer-main{grid-template-columns:1fr 1fr;gap:34px 22px}.footer-note{padding-left:15px}.footer-bottom{flex-wrap:wrap}}@media(max-width:480px){.footer-main{grid-template-columns:1fr}.footer-note{border-left:0;padding-left:0}.footer-bottom span:nth-child(2){display:none}}
+</style>
