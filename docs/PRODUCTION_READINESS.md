@@ -4,7 +4,7 @@ Reviewed the default branch on 26 November 2026. This is a code review of the re
 
 ## Current state
 
-Evoryn is a Vue 3 + TypeScript + Vite single-page storefront deployed as a static GitHub Pages site. It currently demonstrates a cinematic home page, a product collection backed by one shared sample catalog, search preview, product detail modal, theme toggle, and a guest cart persisted in browser storage.
+Evoryn is a Vue 3 + TypeScript + Vite single-page storefront deployed as a static GitHub Pages site. It currently demonstrates a cinematic home page, a product collection backed by one shared sample catalog, search preview, product detail dialog with category/price filters, theme toggle, and a guest cart persisted in browser storage.
 
 The current implementation is a prototype. It is not ready to accept real customer orders or payments.
 
@@ -12,9 +12,9 @@ The current implementation is a prototype. It is not ready to accept real custom
 
 ### Release blockers
 
-1. **No trusted commerce backend.** Products and prices are embedded in browser code or loaded from DummyJSON. A customer can alter browser state. There is no server-side price/stock validation, inventory reservation, order record, or payment confirmation.
+1. **No trusted commerce backend.** The current branch uses hard-coded sample catalog data in browser code. A customer can alter browser state. There is no server-side price/stock validation, inventory reservation, order record, or payment confirmation.
 2. **Catalog contains demo merchandise.** This branch removes the unrelated DummyJSON products from the collection and search. Four hard-coded sample gemstone items remain; their price, stock, and rating values are demonstrations rather than a merchant catalog.
-3. **Cart is temporary and has no checkout.** Cart state is held in Vue memory and disappears on refresh. The cart drawer has no address, delivery, payment, or order-confirmation flow.
+3. **Cart is browser-local and has no checkout.** The guest cart survives a refresh in browser storage, but this state is untrusted and not synchronized to a server. There is no address, delivery, payment, or order-confirmation flow.
 4. **No operations interface.** There is no protected product/inventory management, order fulfillment, refunds, or customer support workflow.
 5. **Business rules are undecided.** Currency, delivery regions and fees, tax handling, returns, payment provider, and order notifications need merchant decisions before those flows can be implemented correctly.
 6. **Automated browser check is stale.** The only Playwright check expects the Vue starter heading “You did it!”, which the current storefront does not render.
@@ -22,10 +22,9 @@ The current implementation is a prototype. It is not ready to accept real custom
 
 ### Storefront quality gaps
 
-- Several navigation entries and story buttons are placeholder links/actions.
-- The newsletter form prevents submission but has no integration or success/error feedback.
-- The cart/product dialogs need a keyboard and screen-reader pass (focus management, Escape handling, and clear accessible labels).
-- Product and order routes, page metadata, shareable product links, and robust empty/error states are missing.
+- The main menu and story calls to action now link to real sections; footer support links and the newsletter form still need destinations and submission feedback.
+- The product detail dialog now supports keyboard activation and Escape; focus placement, focus return, and cart-dialog keyboard behavior still need an accessibility pass.
+- Product and order routes, shareable product links, and robust catalog error states are missing. Basic page metadata is in place; canonical URLs and social preview imagery remain.
 
 ## Recommended implementation order
 
