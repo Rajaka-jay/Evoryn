@@ -109,20 +109,10 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref, watch, nextTick } from 'vue';
+import { sampleGemProducts, type GemProduct } from '@/data/catalog';
 import gem1 from '@/assets/gem1.png';
 import gem2 from '@/assets/gem2.png';
 import gem3 from '@/assets/gem3.png';
-
-interface Product {
-  id: number;
-  title: string;
-  category: string;
-  price: number;
-  rating: number;
-  stock: number;
-  brand?: string;
-  thumbnail: string;
-}
 
 const props = defineProps<{
   searchQuery?: string;
@@ -134,52 +124,11 @@ const emit = defineEmits<{
 }>();
 
 const loading = ref(false);
-const items = ref<Product[]>([]);
+const items = ref<GemProduct[]>([]);
 const showAll = ref(false);
-const activeProduct = ref<Product | null>(null);
+const activeProduct = ref<GemProduct | null>(null);
 
-const customGemItems: Product[] = [
-  {
-    id: 10001,
-    title: 'Blue Sapphire (Ceylon) - 2.10ct',
-    category: 'gemstone',
-    price: 1250,
-    rating: 5,
-    stock: 4,
-    brand: 'Evoryn Gems',
-    thumbnail: gem1
-  },
-  {
-    id: 10002,
-    title: 'Royal Blue Sapphire Ring - 18K',
-    category: 'jewellery',
-    price: 2200,
-    rating: 5,
-    stock: 2,
-    brand: 'Evoryn Fine',
-    thumbnail: gem2
-  },
-  {
-    id: 10003,
-    title: 'Pigeon Blood Ruby - 1.45ct',
-    category: 'gemstone',
-    price: 1980,
-    rating: 4.8,
-    stock: 3,
-    brand: 'Evoryn Gems',
-    thumbnail: gem3
-  },
-  {
-    id: 10004,
-    title: 'Colombian Emerald Pendant',
-    category: 'jewellery',
-    price: 1475,
-    rating: 4.7,
-    stock: 5,
-    brand: 'Evoryn Fine',
-    thumbnail: gem2
-  }
-];
+
 
 function toStars(rating: number): number {
   return Math.max(1, Math.min(5, Math.round(rating)));
@@ -190,7 +139,7 @@ async function loadProducts(): Promise<void> {
   try {
     // Sample fixtures keep the prototype focused on gemstones.
     // Connect a trusted catalog service before using this as a real shop.
-    items.value = [...customGemItems];
+    items.value = sampleGemProducts;
   } finally {
     loading.value = false;
   }
@@ -215,7 +164,7 @@ function onImgError(e: Event): void {
   target.src = gem1;
 }
 
-function openModal(item: Product) {
+function openModal(item: GemProduct) {
   activeProduct.value = item;
 }
 
