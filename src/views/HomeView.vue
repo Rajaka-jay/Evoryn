@@ -26,6 +26,8 @@ interface CartItem {
 const isMenuOpen = ref(false);
 const activeImageIndex = ref(0);
 const gallery = [gemGallery1, gemGallery2, gemGallery3];
+const loadedVideoIds = ref<number[]>([1]);
+let videoObserver: IntersectionObserver | null = null;
 
 const showHeader = ref(true);
 const currentSection = ref(0);
@@ -245,6 +247,25 @@ onMounted(() => {
   window.addEventListener('scroll', handleScroll, { passive: true });
   handleScroll();
   void loadSearchPool();
+
+  if ('IntersectionObserver' in window) {
+    videoObserver = new IntersectionObserver((entries, observer) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        const slideId = Number((entry.target as HTMLElement).dataset.videoSlide);
+        if (Number.isFinite(slideId) && !loadedVideoIds.value.includes(slideId)) {
+          loadedVideoIds.value = [...loadedVideoIds.value, slideId];
+        }
+        observer.unobserve(entry.target);
+      }
+    }, { threshold: 0.01 });
+
+    document.querySelectorAll<HTMLElement>('[data-video-slide]').forEach((section) => {
+      videoObserver?.observe(section);
+    });
+  } else {
+    loadedVideoIds.value = slides.map(({ id }) => id);
+  }
 });
 
 onUnmounted(() => {
@@ -252,6 +273,7 @@ onUnmounted(() => {
   if (searchDebounceTimer) clearTimeout(searchDebounceTimer);
   if (clearHighlightTimer) clearTimeout(clearHighlightTimer);
   window.removeEventListener('scroll', handleScroll);
+  videoObserver?.disconnect();
 });
 </script>
 
@@ -411,9 +433,9 @@ onUnmounted(() => {
       </div>
     </transition>
 
-    <section v-for="slide in slides" :id="slide.id === 1 ? 'home' : 'story'" :key="slide.id" class="relative min-h-screen flex items-center px-6 md:px-24 text-white">
-      <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover">
-        <source :src="slide.videoUrl" type="video/mp4" />
+    <section v-for="slide in slides" :id="slide.id === 1 ? 'home' : 'story'" :key="slide.id" :data-video-slide="slide.id" class="relative min-h-screen flex items-center px-6 md:px-24 text-white bg-slate-950">
+      <video :autoplay="loadedVideoIds.includes(slide.id)" muted loop playsinline preload="none" class="absolute inset-0 w-full h-full object-cover">
+        <source v-if="loadedVideoIds.includes(slide.id)" :src="slide.videoUrl" type="video/mp4" />
       </video>
       <div class="absolute inset-0 bg-black/35"></div>
 
