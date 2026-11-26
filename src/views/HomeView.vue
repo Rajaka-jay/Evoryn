@@ -192,21 +192,9 @@ function updateQty(id: number, delta: number) {
 }
 
 async function loadSearchPool(): Promise<void> {
-  try {
-    const res = await fetch('https://dummyjson.com/products?limit=20&skip=0');
-    const data = await res.json();
-    const apiItems: SearchProduct[] = (data.products ?? []).map((p: any) => ({
-      id: p.id,
-      title: p.title,
-      category: p.category,
-      brand: p.brand,
-      price: p.price,
-      thumbnail: p.thumbnail
-    }));
-    searchPool.value = [...customGemItems, ...apiItems];
-  } catch {
-    searchPool.value = [...customGemItems];
-  }
+  // Keep search results aligned with the sample gemstone collection.
+  // Replace this fixture with the trusted catalog API before accepting orders.
+  searchPool.value = [...customGemItems];
 }
 
 const searchPreviewItems = computed(() => {
