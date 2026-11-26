@@ -18,7 +18,7 @@ The current implementation is a prototype. It is not ready to accept real custom
 4. **No operations interface.** There is no protected product/inventory management, order fulfillment, refunds, or customer support workflow.
 5. **Business rules are undecided.** Currency, delivery regions and fees, tax handling, returns, payment provider, and order notifications need merchant decisions before those flows can be implemented correctly.
 6. **Automated browser check is stale.** The only Playwright check expects the Vue starter heading “You did it!”, which the current storefront does not render.
-7. **Large media payload.** A bundled MP4 is approximately 56 MB. This increases clone/build size and can make the first visit slow, especially on mobile connections.
+7. **Large media payload.** A bundled MP4 is approximately 56 MB. The second hero video is now lazy-loaded when its section enters the viewport, reducing initial transfer; the file still increases repository clone/build size, and video compression/off-site delivery remains a release improvement.
 
 ### Storefront quality gaps
 
@@ -35,7 +35,7 @@ The current implementation is a prototype. It is not ready to accept real custom
 - The visible collection and search now use one shared module containing only four gemstone sample fixtures; connect it to a trusted catalog before launch.
 - The guest cart now survives a refresh in browser storage; build the server-backed checkout separately and never trust the saved client prices.
 - Add product types and a single catalog service boundary so a real backend can replace demo fixtures without spreading fetch logic through components.
-- Optimize video delivery: provide poster images, defer/offload large videos, respect reduced-motion, and avoid downloading both hero videos eagerly.
+- The second hero video now loads only near its section; still compress/offload the large asset, provide poster images, and respect reduced-motion.
 - Add functional store navigation, product detail routes, cart persistence, quantity/stock constraints, and accessible dialogs.
 
 ### Phase 2 — backend and catalog
