@@ -16,7 +16,7 @@ The current implementation is a prototype. It is not ready to accept real custom
 2. **Catalog contains demo merchandise.** This branch removes the unrelated DummyJSON products from the collection and search. Four hard-coded sample gemstone items remain; their price, stock, and rating values are demonstrations rather than a merchant catalog.
 3. **Cart is browser-local and has no checkout.** The guest cart survives a refresh in browser storage, but this state is untrusted and not synchronized to a server. There is no address, delivery, payment, or order-confirmation flow.
 4. **No operations interface.** There is no protected product/inventory management, order fulfillment, refunds, or customer support workflow.
-5. **Business rules are undecided.** Currency, delivery regions and fees, tax handling, returns, payment provider, and order notifications need merchant decisions before those flows can be implemented correctly.
+5. **Fulfillment and settlement rules remain open.** The sales target is Sri Lanka plus international buyers in LKR/USD. Delivery regions and fees, tax handling, returns/refunds, merchant settlement setup, and order notifications need business-owner decisions before those flows can be implemented correctly.
 6. **Automated browser check is stale.** The only Playwright check expects the Vue starter heading “You did it!”, which the current storefront does not render.
 7. **Large media payload.** A bundled MP4 is approximately 56 MB. The second hero video is now lazy-loaded when its section enters the viewport, reducing initial transfer; the file still increases repository clone/build size, and video compression/off-site delivery remains a release improvement.
 
