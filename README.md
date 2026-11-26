@@ -7,7 +7,7 @@ Evoryn is a Vue 3 + TypeScript storefront prototype for a gemstone and jewellery
 - Responsive, video-led brand landing page
 - Sample gemstone collection and product detail modal
 - Search preview
-- In-memory cart demonstration
+- Guest cart demonstration persisted in browser storage
 - Light/dark theme toggle
 - Static GitHub Pages deployment
 
