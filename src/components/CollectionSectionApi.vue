@@ -6,6 +6,31 @@
         Gems and jewellery curated for your collection.
       </p>
 
+      <div class="mt-6 flex flex-wrap items-center justify-between gap-4">
+        <div class="flex flex-wrap gap-2" role="group" aria-label="Filter products by type">
+          <button
+            v-for="category in categories"
+            :key="category.id"
+            type="button"
+            :aria-pressed="selectedCategory === category.id"
+            @click="selectedCategory = category.id"
+            class="rounded-full border px-4 py-2 text-xs uppercase tracking-wider transition"
+            :class="selectedCategory === category.id ? 'border-black bg-black text-white dark:border-white dark:bg-white dark:text-black' : 'border-black/20 hover:border-black dark:border-white/20 dark:hover:border-white'"
+          >
+            {{ category.label }}
+          </button>
+        </div>
+
+        <label class="flex items-center gap-2 text-sm">
+          <span>Sort by</span>
+          <select v-model="sortOrder" name="product-sort" class="rounded-lg border border-black/20 bg-white px-3 py-2 dark:border-white/20 dark:bg-[#17171a]">
+            <option value="featured">Featured</option>
+            <option value="price-low">Price: low to high</option>
+            <option value="price-high">Price: high to low</option>
+          </select>
+        </label>
+      </div>
+
       <div v-if="loading" class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <div v-for="n in 4" :key="n" class="rounded-2xl bg-[#efefef] dark:bg-[#1a1a1d] p-4 animate-pulse">
           <div class="h-52 w-full rounded-2xl bg-gray-300 dark:bg-gray-700"></div>
@@ -20,7 +45,7 @@
         class="mt-8 rounded-xl border border-black/15 dark:border-white/20 bg-[#f8f8f8] dark:bg-[#17171a] p-8 text-center"
       >
         <p class="typo-heading !text-2xl">No matching products</p>
-        <p class="typo-body mt-1">Try another keyword (title, category, brand).</p>
+        <p class="typo-body mt-1">Try another keyword or product type.</p>
       </div>
 
       <div v-else class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -30,7 +55,12 @@
           :key="item.id"
           class="rounded-2xl bg-[#efefef] dark:bg-[#1a1a1d] p-4 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg cursor-pointer"
           :class="item.id === highlightId ? 'ring-4 ring-amber-400 shadow-2xl animate-pulse' : ''"
+          role="button"
+          tabindex="0"
+          :aria-label="`View details for ${item.title}`"
           @click="openModal(item)"
+          @keydown.enter.prevent="openModal(item)"
+          @keydown.space.prevent="openModal(item)"
         >
           <div class="overflow-hidden rounded-2xl bg-[#dcdcdc] dark:bg-[#222228]">
             <img
@@ -64,7 +94,7 @@
         </article>
       </div>
 
-      <div v-if="filteredItems.length > 4" class="mt-12 flex justify-center">
+      <div v-if="categoryItems.length > 4" class="mt-12 flex justify-center">
         <button
           @click="showAll = !showAll"
           class="group inline-flex items-center gap-3 rounded-full border border-black/30 dark:border-white/35 bg-white dark:bg-transparent px-8 py-3 transition-all duration-300 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black typo-btn"
@@ -78,15 +108,15 @@
 
     <!-- Product modal -->
     <transition name="fade">
-      <div v-if="activeProduct" class="fixed inset-0 z-[120] bg-black/50" @click.self="closeModal">
+      <div v-if="activeProduct" class="fixed inset-0 z-[120] bg-black/50" role="dialog" aria-modal="true" aria-labelledby="active-product-title" @click.self="closeModal" @keydown.esc="closeModal">
         <div class="mx-auto mt-16 w-[92%] max-w-3xl rounded-3xl bg-white dark:bg-[#121214] p-6 shadow-xl">
           <div class="flex items-center justify-between">
-            <h3 class="typo-heading !text-2xl">{{ activeProduct.title }}</h3>
-            <button @click="closeModal">✕</button>
+            <h3 id="active-product-title" class="typo-heading !text-2xl">{{ activeProduct.title }}</h3>
+            <button type="button" aria-label="Close product details" @click="closeModal">✕</button>
           </div>
 
           <div class="mt-6 grid gap-6 md:grid-cols-2">
-            <img :src="activeProduct.thumbnail" class="w-full rounded-2xl object-cover" />
+            <img :src="activeProduct.thumbnail" :alt="activeProduct.title" class="w-full rounded-2xl object-cover" />
             <div>
               <p class="typo-body">Category: {{ activeProduct.category }}</p>
               <p class="typo-body">Brand: {{ activeProduct.brand || 'N/A' }}</p>
@@ -109,27 +139,10 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref, watch, nextTick } from 'vue';
+import { sampleGemProducts, type GemProduct } from '@/data/catalog';
 import gem1 from '@/assets/gem1.png';
 import gem2 from '@/assets/gem2.png';
 import gem3 from '@/assets/gem3.png';
-
-interface Product {
-  id: number;
-  title: string;
-  category: string;
-  price: number;
-  rating: number;
-  stock: number;
-  brand?: string;
-  thumbnail: string;
-}
-
-interface ProductsResponse {
-  products: Product[];
-  total: number;
-  skip: number;
-  limit: number;
-}
 
 const props = defineProps<{
   searchQuery?: string;
@@ -141,52 +154,18 @@ const emit = defineEmits<{
 }>();
 
 const loading = ref(false);
-const items = ref<Product[]>([]);
+const items = ref<GemProduct[]>([]);
 const showAll = ref(false);
-const activeProduct = ref<Product | null>(null);
+const activeProduct = ref<GemProduct | null>(null);
+const selectedCategory = ref<'all' | 'gemstone' | 'jewellery'>('all');
+const sortOrder = ref<'featured' | 'price-low' | 'price-high'>('featured');
+const categories = [
+  { id: 'all', label: 'All pieces' },
+  { id: 'gemstone', label: 'Gemstones' },
+  { id: 'jewellery', label: 'Jewellery' }
+] as const;
 
-const customGemItems: Product[] = [
-  {
-    id: 10001,
-    title: 'Blue Sapphire (Ceylon) - 2.10ct',
-    category: 'gemstone',
-    price: 1250,
-    rating: 5,
-    stock: 4,
-    brand: 'Evoryn Gems',
-    thumbnail: gem1
-  },
-  {
-    id: 10002,
-    title: 'Royal Blue Sapphire Ring - 18K',
-    category: 'jewellery',
-    price: 2200,
-    rating: 5,
-    stock: 2,
-    brand: 'Evoryn Fine',
-    thumbnail: gem2
-  },
-  {
-    id: 10003,
-    title: 'Pigeon Blood Ruby - 1.45ct',
-    category: 'gemstone',
-    price: 1980,
-    rating: 4.8,
-    stock: 3,
-    brand: 'Evoryn Gems',
-    thumbnail: gem3
-  },
-  {
-    id: 10004,
-    title: 'Colombian Emerald Pendant',
-    category: 'jewellery',
-    price: 1475,
-    rating: 4.7,
-    stock: 5,
-    brand: 'Evoryn Fine',
-    thumbnail: gem2
-  }
-];
+
 
 function toStars(rating: number): number {
   return Math.max(1, Math.min(5, Math.round(rating)));
@@ -195,11 +174,9 @@ function toStars(rating: number): number {
 async function loadProducts(): Promise<void> {
   loading.value = true;
   try {
-    const res = await fetch('https://dummyjson.com/products?limit=8&skip=0');
-    const data = (await res.json()) as ProductsResponse;
-    items.value = [...customGemItems, ...(data.products ?? [])];
-  } catch {
-    items.value = [...customGemItems];
+    // Sample fixtures keep the prototype focused on gemstones.
+    // Connect a trusted catalog service before using this as a real shop.
+    items.value = sampleGemProducts;
   } finally {
     loading.value = false;
   }
@@ -213,8 +190,18 @@ const filteredItems = computed(() => {
   );
 });
 
+const categoryItems = computed(() => {
+  let result = selectedCategory.value === 'all'
+    ? [...filteredItems.value]
+    : filteredItems.value.filter((item) => item.category === selectedCategory.value);
+
+  if (sortOrder.value === 'price-low') result.sort((a, b) => a.price - b.price);
+  if (sortOrder.value === 'price-high') result.sort((a, b) => b.price - a.price);
+  return result;
+});
+
 const visibleItems = computed(() => {
-  return showAll.value ? filteredItems.value : filteredItems.value.slice(0, 4);
+  return showAll.value ? categoryItems.value : categoryItems.value.slice(0, 4);
 });
 
 const highlightId = computed(() => props.highlightId ?? null);
@@ -224,7 +211,7 @@ function onImgError(e: Event): void {
   target.src = gem1;
 }
 
-function openModal(item: Product) {
+function openModal(item: GemProduct) {
   activeProduct.value = item;
 }
 
@@ -244,7 +231,7 @@ function handleAddToCart() {
 }
 
 watch(
-  () => props.searchQuery,
+  [() => props.searchQuery, selectedCategory],
   () => {
     showAll.value = false;
   }

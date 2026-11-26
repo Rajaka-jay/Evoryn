@@ -11,15 +11,9 @@ import gemGallery3 from '@/assets/gem3.png';
 
 import CollectionSectionApi from '@/components/CollectionSectionApi.vue';
 import SiteFooter from '@/components/SiteFooter.vue';
+import { sampleGemProducts, type GemProduct } from '@/data/catalog';
 
-interface SearchProduct {
-  id: number;
-  title: string;
-  category: string;
-  brand?: string;
-  price: number;
-  thumbnail: string;
-}
+type SearchProduct = Pick<GemProduct, 'id' | 'title' | 'category' | 'brand' | 'price' | 'thumbnail'>;
 
 interface CartItem {
   id: number;
@@ -32,17 +26,19 @@ interface CartItem {
 const isMenuOpen = ref(false);
 const activeImageIndex = ref(0);
 const gallery = [gemGallery1, gemGallery2, gemGallery3];
+const loadedVideoIds = ref<number[]>([1]);
+let videoObserver: IntersectionObserver | null = null;
 
 const showHeader = ref(true);
 const currentSection = ref(0);
 const isHeaderBlack = computed(() => currentSection.value >= 2);
 
 const menuItems = [
-  { name: 'Home' },
-  { name: 'Collection' },
-  { name: 'Museum' },
-  { name: 'Services' },
-  { name: 'Contact' }
+  { name: 'Home', href: '#home' },
+  { name: 'Collection', href: '#collection' },
+  { name: 'Craftsmanship', href: '#craftsmanship' },
+  { name: 'Our Values', href: '#values' },
+  { name: 'Contact', href: '#contact' }
 ];
 
 const isSearchOpen = ref(false);
@@ -58,6 +54,35 @@ const isDark = computed(() => theme.value === 'dark');
 
 const cartOpen = ref(false);
 const cartItems = ref<CartItem[]>([]);
+const CART_STORAGE_KEY = 'evoryn-cart-v1';
+
+function readStoredCart(): CartItem[] {
+  if (typeof window === 'undefined') return [];
+
+  try {
+    const parsed: unknown = JSON.parse(localStorage.getItem(CART_STORAGE_KEY) ?? '[]');
+    if (!Array.isArray(parsed)) return [];
+
+    return parsed
+      .filter((value): value is CartItem => {
+        if (typeof value !== 'object' || value === null) return false;
+        const item = value as Partial<CartItem>;
+        return Number.isSafeInteger(item.id)
+          && typeof item.title === 'string'
+          && item.title.length <= 240
+          && Number.isFinite(item.price)
+          && (item.price ?? -1) >= 0
+          && typeof item.thumbnail === 'string'
+          && item.thumbnail.length <= 2048
+          && Number.isSafeInteger(item.quantity)
+          && (item.quantity ?? 0) > 0
+          && (item.quantity ?? 100) <= 99;
+      })
+      .slice(0, 50);
+  } catch {
+    return [];
+  }
+}
 
 const cartCount = computed(() =>
   cartItems.value.reduce((sum, item) => sum + item.quantity, 0)
@@ -83,41 +108,6 @@ const slides = [
       'Purity of line and understated elegance. The very essence of the round wristwatch.',
     videoUrl: videoTwo,
     buttonText: 'EXPLORE COLLECTION'
-  }
-];
-
-const customGemItems: SearchProduct[] = [
-  {
-    id: 10001,
-    title: 'Blue Sapphire (Ceylon) - 2.10ct',
-    category: 'gemstone',
-    brand: 'Evoryn Gems',
-    price: 1250,
-    thumbnail: gemGallery1
-  },
-  {
-    id: 10002,
-    title: 'Royal Blue Sapphire Ring - 18K',
-    category: 'jewellery',
-    brand: 'Evoryn Fine',
-    price: 2200,
-    thumbnail: gemGallery2
-  },
-  {
-    id: 10003,
-    title: 'Pigeon Blood Ruby - 1.45ct',
-    category: 'gemstone',
-    brand: 'Evoryn Gems',
-    price: 1980,
-    thumbnail: gemGallery3
-  },
-  {
-    id: 10004,
-    title: 'Colombian Emerald Pendant',
-    category: 'jewellery',
-    brand: 'Evoryn Fine',
-    price: 1475,
-    thumbnail: gemGallery2
   }
 ];
 
@@ -192,21 +182,9 @@ function updateQty(id: number, delta: number) {
 }
 
 async function loadSearchPool(): Promise<void> {
-  try {
-    const res = await fetch('https://dummyjson.com/products?limit=20&skip=0');
-    const data = await res.json();
-    const apiItems: SearchProduct[] = (data.products ?? []).map((p: any) => ({
-      id: p.id,
-      title: p.title,
-      category: p.category,
-      brand: p.brand,
-      price: p.price,
-      thumbnail: p.thumbnail
-    }));
-    searchPool.value = [...customGemItems, ...apiItems];
-  } catch {
-    searchPool.value = [...customGemItems];
-  }
+  // Keep search results aligned with the sample gemstone collection.
+  // Replace this fixture with the trusted catalog API before accepting orders.
+  searchPool.value = sampleGemProducts;
 }
 
 const searchPreviewItems = computed(() => {
@@ -239,7 +217,21 @@ watch(searchQuery, (value) => {
   }, 300);
 });
 
+watch(
+  cartItems,
+  (items) => {
+    try {
+      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
+    } catch {
+      // The cart still works for this session when browser storage is unavailable.
+    }
+  },
+  { deep: true }
+);
+
 onMounted(() => {
+  cartItems.value = readStoredCart();
+
   const saved = localStorage.getItem('theme') as 'light' | 'dark' | null;
   if (saved === 'dark' || saved === 'light') {
     applyTheme(saved);
@@ -255,6 +247,25 @@ onMounted(() => {
   window.addEventListener('scroll', handleScroll, { passive: true });
   handleScroll();
   void loadSearchPool();
+
+  if ('IntersectionObserver' in window) {
+    videoObserver = new IntersectionObserver((entries, observer) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        const slideId = Number((entry.target as HTMLElement).dataset.videoSlide);
+        if (Number.isFinite(slideId) && !loadedVideoIds.value.includes(slideId)) {
+          loadedVideoIds.value = [...loadedVideoIds.value, slideId];
+        }
+        observer.unobserve(entry.target);
+      }
+    }, { threshold: 0.01 });
+
+    document.querySelectorAll<HTMLElement>('[data-video-slide]').forEach((section) => {
+      videoObserver?.observe(section);
+    });
+  } else {
+    loadedVideoIds.value = slides.map(({ id }) => id);
+  }
 });
 
 onUnmounted(() => {
@@ -262,6 +273,7 @@ onUnmounted(() => {
   if (searchDebounceTimer) clearTimeout(searchDebounceTimer);
   if (clearHighlightTimer) clearTimeout(clearHighlightTimer);
   window.removeEventListener('scroll', handleScroll);
+  videoObserver?.disconnect();
 });
 </script>
 
@@ -270,6 +282,9 @@ onUnmounted(() => {
     <div class="fixed top-0 left-0 w-full h-16 z-[60]" @mouseenter="onTopHoverEnter" @mouseleave="onTopHoverLeave"></div>
 
     <aside
+      id="site-menu"
+      aria-label="Main menu"
+      :aria-hidden="!isMenuOpen"
       :class="isMenuOpen ? 'translate-x-0' : '-translate-x-full'"
       class="fixed top-0 left-0 h-full w-80 bg-black/95 backdrop-blur-xl z-[100] transition-transform duration-700 ease-in-out border-r border-white/10 p-12 text-white"
     >
@@ -278,7 +293,7 @@ onUnmounted(() => {
       </button>
 
       <nav class="flex flex-col gap-8">
-        <a v-for="item in menuItems" :key="item.name" href="#" class="text-3xl font-light hover:text-amber-400 transition-colors">
+        <a v-for="item in menuItems" :key="item.name" :href="item.href" @click="isMenuOpen = false" class="text-3xl font-light hover:text-amber-400 transition-colors">
           {{ item.name }}
         </a>
       </nav>
@@ -292,7 +307,7 @@ onUnmounted(() => {
       class="fixed top-0 left-0 w-full z-50 grid grid-cols-3 items-center px-6 md:px-12 py-6 md:py-8 transition-all duration-500"
     >
       <div class="flex items-center">
-        <button @click="isMenuOpen = true" class="flex items-center gap-3 group cursor-pointer">
+        <button @click="isMenuOpen = true" :aria-expanded="isMenuOpen" aria-controls="site-menu" class="flex items-center gap-3 group cursor-pointer">
           <div class="flex flex-col gap-1.5">
             <div class="w-6 h-0.5 bg-current"></div>
             <div class="w-6 h-0.5 bg-current"></div>
@@ -384,10 +399,10 @@ onUnmounted(() => {
     <!-- Cart drawer -->
     <transition name="fade">
       <div v-if="cartOpen" class="fixed inset-0 z-[120] bg-black/40" @click.self="cartOpen = false">
-        <aside class="absolute right-0 top-0 h-full w-[90vw] max-w-md bg-white dark:bg-[#121214] p-6 shadow-xl">
+        <aside role="dialog" aria-modal="true" aria-labelledby="cart-title" class="absolute right-0 top-0 h-full w-[90vw] max-w-md bg-white dark:bg-[#121214] p-6 shadow-xl">
           <div class="flex items-center justify-between">
-            <h3 class="typo-heading !text-2xl">Your Cart</h3>
-            <button class="text-sm" @click="cartOpen = false">✕</button>
+            <h3 id="cart-title" class="typo-heading !text-2xl">Your Cart</h3>
+            <button type="button" aria-label="Close cart" class="text-sm" @click="cartOpen = false">✕</button>
           </div>
 
           <div v-if="cartItems.length === 0" class="mt-6 text-sm text-black/60 dark:text-white/60">
@@ -401,12 +416,12 @@ onUnmounted(() => {
                 <p class="text-sm font-semibold truncate">{{ item.title }}</p>
                 <p class="text-xs text-black/60 dark:text-white/60">USD ${{ item.price }}</p>
                 <div class="mt-2 flex items-center gap-2">
-                  <button class="px-2 border" @click="updateQty(item.id, -1)">-</button>
+                  <button type="button" :aria-label="`Decrease quantity of ${item.title}`" class="px-2 border" @click="updateQty(item.id, -1)">-</button>
                   <span class="text-sm">{{ item.quantity }}</span>
-                  <button class="px-2 border" @click="updateQty(item.id, 1)">+</button>
+                  <button type="button" :aria-label="`Increase quantity of ${item.title}`" class="px-2 border" @click="updateQty(item.id, 1)">+</button>
                 </div>
               </div>
-              <button class="ml-auto text-xs text-red-500" @click="removeFromCart(item.id)">Remove</button>
+              <button type="button" :aria-label="`Remove ${item.title} from cart`" class="ml-auto text-xs text-red-500" @click="removeFromCart(item.id)">Remove</button>
             </div>
           </div>
 
@@ -418,23 +433,23 @@ onUnmounted(() => {
       </div>
     </transition>
 
-    <section v-for="slide in slides" :key="slide.id" class="relative min-h-screen flex items-center px-6 md:px-24 text-white">
-      <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover">
-        <source :src="slide.videoUrl" type="video/mp4" />
+    <section v-for="slide in slides" :id="slide.id === 1 ? 'home' : 'story'" :key="slide.id" :data-video-slide="slide.id" class="relative min-h-screen flex items-center px-6 md:px-24 text-white bg-slate-950">
+      <video :autoplay="loadedVideoIds.includes(slide.id)" muted loop playsinline preload="none" class="absolute inset-0 w-full h-full object-cover">
+        <source v-if="loadedVideoIds.includes(slide.id)" :src="slide.videoUrl" type="video/mp4" />
       </video>
       <div class="absolute inset-0 bg-black/35"></div>
 
       <div class="relative z-10 max-w-2xl">
         <h2 class="text-4xl md:text-7xl font-light tracking-tight mb-6">{{ slide.title }}</h2>
         <p class="text-white/90 text-base md:text-lg leading-relaxed mb-8 font-light italic">{{ slide.description }}</p>
-        <button class="px-8 py-3 border border-white/60 rounded-full hover:bg-white hover:text-black transition-all duration-500 text-[10px] tracking-[0.2em] font-bold uppercase">
+        <a :href="slide.id === 1 ? '#craftsmanship' : '#collection'" class="inline-block px-8 py-3 border border-white/60 rounded-full hover:bg-white hover:text-black transition-all duration-500 text-[10px] tracking-[0.2em] font-bold uppercase">
           {{ slide.buttonText }}
-        </button>
+        </a>
       </div>
     </section>
 
     <section class="bg-white dark:bg-[#0f0f11] text-slate-900 dark:text-slate-100">
-      <div class="min-h-screen w-full flex flex-col md:flex-row items-center">
+      <div id="craftsmanship" class="min-h-screen w-full flex flex-col md:flex-row items-center">
         <div class="w-full md:w-1/2 h-[60vh] md:h-screen relative overflow-hidden">
           <img :src="manufactureImg" class="w-full h-full object-cover" />
         </div>
@@ -452,14 +467,14 @@ onUnmounted(() => {
               Owned by the same family since its inception, our vault benefits from full creative freedom.
             </p>
 
-            <button class="px-10 md:px-12 py-3 md:py-4 border border-slate-900 dark:border-slate-100 text-slate-900 dark:text-slate-100 rounded-full hover:bg-slate-900 hover:text-white dark:hover:bg-slate-100 dark:hover:text-black transition-all duration-500 typo-btn">
+            <a href="#values" class="inline-block px-10 md:px-12 py-3 md:py-4 border border-slate-900 dark:border-slate-100 text-slate-900 dark:text-slate-100 rounded-full hover:bg-slate-900 hover:text-white dark:hover:bg-slate-100 dark:hover:text-black transition-all duration-500 typo-btn">
               Our Values
-            </button>
+            </a>
           </div>
         </div>
       </div>
 
-      <div class="min-h-screen w-full flex flex-col md:flex-row items-center">
+      <div id="values" class="min-h-screen w-full flex flex-col md:flex-row items-center">
         <div class="w-full md:w-1/2 h-auto md:h-screen flex flex-col justify-center px-6 md:px-24 py-12 md:py-0 order-2 md:order-1">
           <div class="max-w-lg">
             <span class="typo-label mb-4 block">A Long-Term Vision</span>
@@ -473,9 +488,9 @@ onUnmounted(() => {
               We nurture a tradition of innovation, pushing the boundaries of gemstone artistry through advanced research and rare handcrafts.
             </p>
 
-            <button class="px-10 py-3 md:py-4 border border-slate-900 dark:border-slate-100 text-slate-900 dark:text-slate-100 rounded-full hover:bg-slate-900 hover:text-white dark:hover:bg-slate-100 dark:hover:text-black transition-all duration-500 typo-btn">
-              Advanced Research
-            </button>
+            <a href="#collection" class="inline-block px-10 py-3 md:py-4 border border-slate-900 dark:border-slate-100 text-slate-900 dark:text-slate-100 rounded-full hover:bg-slate-900 hover:text-white dark:hover:bg-slate-100 dark:hover:text-black transition-all duration-500 typo-btn">
+              Explore Collection
+            </a>
           </div>
         </div>
 
@@ -501,7 +516,7 @@ onUnmounted(() => {
       </div>
     </section>
 
-    <section ref="collectionSectionRef" class="bg-white dark:bg-[#0f0f11] text-black dark:text-white">
+    <section id="collection" ref="collectionSectionRef" class="bg-white dark:bg-[#0f0f11] text-black dark:text-white">
       <CollectionSectionApi
         :search-query="debouncedSearchQuery"
         :highlight-id="selectedProductId"
@@ -509,7 +524,7 @@ onUnmounted(() => {
       />
     </section>
 
-    <section class="bg-white dark:bg-[#0f0f11] text-black dark:text-white border-t border-black/20 dark:border-white/15">
+    <section id="contact" class="bg-white dark:bg-[#0f0f11] text-black dark:text-white border-t border-black/20 dark:border-white/15">
       <div>
         <SiteFooter />
       </div>
