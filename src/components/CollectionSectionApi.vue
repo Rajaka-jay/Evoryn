@@ -6,6 +6,31 @@
         Gems and jewellery curated for your collection.
       </p>
 
+      <div class="mt-6 flex flex-wrap items-center justify-between gap-4">
+        <div class="flex flex-wrap gap-2" role="group" aria-label="Filter products by type">
+          <button
+            v-for="category in categories"
+            :key="category.id"
+            type="button"
+            :aria-pressed="selectedCategory === category.id"
+            @click="selectedCategory = category.id"
+            class="rounded-full border px-4 py-2 text-xs uppercase tracking-wider transition"
+            :class="selectedCategory === category.id ? 'border-black bg-black text-white dark:border-white dark:bg-white dark:text-black' : 'border-black/20 hover:border-black dark:border-white/20 dark:hover:border-white'"
+          >
+            {{ category.label }}
+          </button>
+        </div>
+
+        <label class="flex items-center gap-2 text-sm">
+          <span>Sort by</span>
+          <select v-model="sortOrder" name="product-sort" class="rounded-lg border border-black/20 bg-white px-3 py-2 dark:border-white/20 dark:bg-[#17171a]">
+            <option value="featured">Featured</option>
+            <option value="price-low">Price: low to high</option>
+            <option value="price-high">Price: high to low</option>
+          </select>
+        </label>
+      </div>
+
       <div v-if="loading" class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <div v-for="n in 4" :key="n" class="rounded-2xl bg-[#efefef] dark:bg-[#1a1a1d] p-4 animate-pulse">
           <div class="h-52 w-full rounded-2xl bg-gray-300 dark:bg-gray-700"></div>
@@ -20,7 +45,7 @@
         class="mt-8 rounded-xl border border-black/15 dark:border-white/20 bg-[#f8f8f8] dark:bg-[#17171a] p-8 text-center"
       >
         <p class="typo-heading !text-2xl">No matching products</p>
-        <p class="typo-body mt-1">Try another keyword (title, category, brand).</p>
+        <p class="typo-body mt-1">Try another keyword or product type.</p>
       </div>
 
       <div v-else class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -30,7 +55,12 @@
           :key="item.id"
           class="rounded-2xl bg-[#efefef] dark:bg-[#1a1a1d] p-4 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg cursor-pointer"
           :class="item.id === highlightId ? 'ring-4 ring-amber-400 shadow-2xl animate-pulse' : ''"
+          role="button"
+          tabindex="0"
+          :aria-label="`View details for ${item.title}`"
           @click="openModal(item)"
+          @keydown.enter.prevent="openModal(item)"
+          @keydown.space.prevent="openModal(item)"
         >
           <div class="overflow-hidden rounded-2xl bg-[#dcdcdc] dark:bg-[#222228]">
             <img
@@ -64,7 +94,7 @@
         </article>
       </div>
 
-      <div v-if="filteredItems.length > 4" class="mt-12 flex justify-center">
+      <div v-if="categoryItems.length > 4" class="mt-12 flex justify-center">
         <button
           @click="showAll = !showAll"
           class="group inline-flex items-center gap-3 rounded-full border border-black/30 dark:border-white/35 bg-white dark:bg-transparent px-8 py-3 transition-all duration-300 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black typo-btn"
@@ -78,15 +108,15 @@
 
     <!-- Product modal -->
     <transition name="fade">
-      <div v-if="activeProduct" class="fixed inset-0 z-[120] bg-black/50" @click.self="closeModal">
+      <div v-if="activeProduct" class="fixed inset-0 z-[120] bg-black/50" role="dialog" aria-modal="true" aria-labelledby="active-product-title" @click.self="closeModal" @keydown.esc="closeModal">
         <div class="mx-auto mt-16 w-[92%] max-w-3xl rounded-3xl bg-white dark:bg-[#121214] p-6 shadow-xl">
           <div class="flex items-center justify-between">
-            <h3 class="typo-heading !text-2xl">{{ activeProduct.title }}</h3>
-            <button @click="closeModal">✕</button>
+            <h3 id="active-product-title" class="typo-heading !text-2xl">{{ activeProduct.title }}</h3>
+            <button type="button" aria-label="Close product details" @click="closeModal">✕</button>
           </div>
 
           <div class="mt-6 grid gap-6 md:grid-cols-2">
-            <img :src="activeProduct.thumbnail" class="w-full rounded-2xl object-cover" />
+            <img :src="activeProduct.thumbnail" :alt="activeProduct.title" class="w-full rounded-2xl object-cover" />
             <div>
               <p class="typo-body">Category: {{ activeProduct.category }}</p>
               <p class="typo-body">Brand: {{ activeProduct.brand || 'N/A' }}</p>
@@ -127,6 +157,13 @@ const loading = ref(false);
 const items = ref<GemProduct[]>([]);
 const showAll = ref(false);
 const activeProduct = ref<GemProduct | null>(null);
+const selectedCategory = ref<'all' | 'gemstone' | 'jewellery'>('all');
+const sortOrder = ref<'featured' | 'price-low' | 'price-high'>('featured');
+const categories = [
+  { id: 'all', label: 'All pieces' },
+  { id: 'gemstone', label: 'Gemstones' },
+  { id: 'jewellery', label: 'Jewellery' }
+] as const;
 
 
 
@@ -153,8 +190,18 @@ const filteredItems = computed(() => {
   );
 });
 
+const categoryItems = computed(() => {
+  let result = selectedCategory.value === 'all'
+    ? [...filteredItems.value]
+    : filteredItems.value.filter((item) => item.category === selectedCategory.value);
+
+  if (sortOrder.value === 'price-low') result.sort((a, b) => a.price - b.price);
+  if (sortOrder.value === 'price-high') result.sort((a, b) => b.price - a.price);
+  return result;
+});
+
 const visibleItems = computed(() => {
-  return showAll.value ? filteredItems.value : filteredItems.value.slice(0, 4);
+  return showAll.value ? categoryItems.value : categoryItems.value.slice(0, 4);
 });
 
 const highlightId = computed(() => props.highlightId ?? null);
@@ -184,7 +231,7 @@ function handleAddToCart() {
 }
 
 watch(
-  () => props.searchQuery,
+  [() => props.searchQuery, selectedCategory],
   () => {
     showAll.value = false;
   }
